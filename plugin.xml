@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="classCleanerBuilder"
+         name="ClassCleaner Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="de.centerdevice.classcleaner.ClassCleanerBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="classCleanerNature"
+         name="ClassCleaner Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="de.centerdevice.classcleaner.ClassCleanerNature">
+         </run>
+      </runtime>
+      <builder
+            id="ClassCleaner.classCleanerBuilder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="ClassCleaner Nature commands"
+            id="ClassCleaner.classCleanerNature.category">
+      </category>
+      <command
+            name="Add/RemoveClassCleaner Nature"
+            defaultHandler="de.centerdevice.classcleaner.AddRemoveClassCleanerNatureHandler"
+            categoryId="ClassCleaner.classCleanerNature.category"
+            id="ClassCleaner.addRemoveClassCleanerNature">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+         <command
+               commandId="ClassCleaner.addRemoveClassCleanerNature"
+               label="Disable ClassCleaner"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <test
+                              value="ClassCleaner.classCleanerNature"
+                              property="org.eclipse.core.resources.projectNature">
+                        </test>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ClassCleaner.addRemoveClassCleanerNature"
+               label="Enable ClassCleaner"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <not>
+                           <test
+                                 value="ClassCleaner.classCleanerNature"
+                                 property="org.eclipse.core.resources.projectNature">
+                           </test>
+                        </not>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+
+</plugin>
