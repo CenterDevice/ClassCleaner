@@ -1,4 +1,4 @@
-package de.centerdevice.classcleaner.java;
+package de.centerdevice.classcleaner.java.search;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 
-class JavaReferenceSearch {
+public class JavaReferenceSearch {
 	private final SearchEngine searchEngine;
 	private IProgressMonitor monitor;
 

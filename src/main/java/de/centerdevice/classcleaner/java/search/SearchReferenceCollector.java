@@ -1,4 +1,4 @@
-package de.centerdevice.classcleaner.java;
+package de.centerdevice.classcleaner.java.search;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.eclipse.jdt.core.search.MethodReferenceMatch;
 import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jdt.core.search.SearchRequestor;
 
-public class SearchReferenceCollector extends SearchRequestor {
+class SearchReferenceCollector extends SearchRequestor {
 
 	private final List<IJavaElement> references = new ArrayList<>();
 

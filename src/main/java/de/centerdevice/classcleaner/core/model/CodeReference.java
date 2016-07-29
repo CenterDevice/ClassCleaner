@@ -20,6 +20,6 @@ public class CodeReference {
 
 	@Override
 	public String toString() {
-		return src.getName() + " -> " + dst.getName();
+		return src.getClassName() + " -> " + dst.getClassName();
 	}
 }

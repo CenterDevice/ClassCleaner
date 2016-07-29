@@ -1,4 +1,4 @@
-package de.centerdevice.classcleaner.java;
+package de.centerdevice.classcleaner.java.conversion;
 
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
@@ -9,7 +9,13 @@ import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.FieldElement;
 import de.centerdevice.classcleaner.core.model.MethodElement;
 
-class JavaElementConverter {
+public class JavaElementConverter {
+
+	private LineNumberProvider lineNumberProvider;
+
+	public JavaElementConverter(LineNumberProvider lineNumberProvider) {
+		this.lineNumberProvider = lineNumberProvider;
+	}
 
 	public CodeElement convert(IJavaElement element) {
 		try {
@@ -23,25 +29,25 @@ class JavaElementConverter {
 		if (element instanceof IMethod) {
 			return createMethodElement((IMethod) element);
 		} else if (element instanceof IField) {
-			return createFieldElement(element, (IField) element);
+			return createFieldElement((IField) element);
 		}
 
 		return null;
 	}
 
-	protected FieldElement createFieldElement(IJavaElement element, IField field) throws JavaModelException {
-		return new FieldElement(getFullyQualifiedClassName(element), element.getElementName(),
-				field.getTypeSignature());
+	protected FieldElement createFieldElement(IField field) throws JavaModelException {
+		return new FieldElement(getFullyQualifiedClassName(field), field.getElementName(), field.getTypeSignature(),
+				lineNumberProvider.getNewLineNumber(field.getSourceRange()));
 	}
 
 	protected MethodElement createMethodElement(IMethod method) throws JavaModelException {
-		return new MethodElement(getFullyQualifiedClassName(method), method.getElementName(), method.getSignature());
+		return new MethodElement(getFullyQualifiedClassName(method), method.getElementName(), method.getSignature(),
+				lineNumberProvider.getNewLineNumber(method.getSourceRange()));
 	}
 
 	protected String getFullyQualifiedClassName(IJavaElement element) {
 		IJavaElement packageFragment = element.getAncestor(IJavaElement.PACKAGE_FRAGMENT);
 		IJavaElement type = element.getAncestor(IJavaElement.TYPE);
-		String fullyQualifiedClassname = packageFragment.getElementName() + "." + type.getElementName();
-		return fullyQualifiedClassname;
+		return packageFragment.getElementName() + "." + type.getElementName();
 	}
 }

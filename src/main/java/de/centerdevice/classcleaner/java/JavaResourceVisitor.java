@@ -12,6 +12,9 @@ import org.eclipse.jdt.core.JavaCore;
 
 import de.centerdevice.classcleaner.ClassCleanerResourceVisitor;
 import de.centerdevice.classcleaner.core.model.CodeReference;
+import de.centerdevice.classcleaner.java.conversion.JavaElementConverter;
+import de.centerdevice.classcleaner.java.conversion.LineNumberProvider;
+import de.centerdevice.classcleaner.java.search.JavaReferenceSearch;
 
 public class JavaResourceVisitor implements ClassCleanerResourceVisitor {
 
@@ -20,18 +23,23 @@ public class JavaResourceVisitor implements ClassCleanerResourceVisitor {
 		if (resource.getName().endsWith(".java")) {
 			IJavaElement javaElement = JavaCore.create(resource);
 			if (javaElement instanceof ICompilationUnit) {
-				return collectReferences(javaElement, monitor);
+				return collectReferences((ICompilationUnit) javaElement, monitor);
 			}
 		}
 
 		return new ArrayList<>();
 	}
 
-	protected List<CodeReference> collectReferences(IJavaElement javaElement, IProgressMonitor monitor) {
-		JavaReferenceCollector javaReferenceCollector = new JavaReferenceCollector(new JavaReferenceSearch(monitor),
-				monitor);
+	protected List<CodeReference> collectReferences(ICompilationUnit javaElement, IProgressMonitor monitor) {
+		JavaElementConverter converter = new JavaElementConverter(new LineNumberProvider(javaElement));
+		return collectReferences(javaElement, new JavaReferenceSearch(monitor), converter);
+	}
+
+	protected List<CodeReference> collectReferences(ICompilationUnit javaElement, JavaReferenceSearch searchEngine,
+			JavaElementConverter elementConverter) {
+		JavaReferenceCollector javaReferenceCollector = new JavaReferenceCollector(searchEngine, elementConverter);
 		try {
-			javaReferenceCollector.collect((ICompilationUnit) javaElement);
+			javaReferenceCollector.collect(javaElement);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

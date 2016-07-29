@@ -5,6 +5,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 
+import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.CodeReference;
 
 public class ResultReporter {
@@ -18,8 +19,15 @@ public class ResultReporter {
 	public void report(IFile file, List<CodeReference> references) {
 		for (CodeReference codeReferences : references) {
 			if (codeReferences.getSource() == null) {
-				marker.addMarker(file, "Thingy is never used", 1, IMarker.SEVERITY_INFO);
+				reportUnusedElement(file, codeReferences.getDestination());
 			}
+		}
+	}
+
+	protected void reportUnusedElement(IFile file, CodeElement source) {
+		if (source.getLineNumber() > 0) {
+			marker.addMarker(file, source.getElementName() + " is never used", source.getLineNumber(),
+					IMarker.SEVERITY_INFO);
 		}
 	}
 

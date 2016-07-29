@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
@@ -13,22 +12,24 @@ import org.eclipse.jdt.core.IType;
 
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.CodeReference;
+import de.centerdevice.classcleaner.java.conversion.JavaElementConverter;
+import de.centerdevice.classcleaner.java.search.JavaReferenceSearch;
 
 class JavaReferenceCollector {
 
-	private static final JavaElementConverter CONVERTER = new JavaElementConverter();
-
 	private final JavaReferenceSearch searchEngine;
+	private final JavaElementConverter converter;
 
 	private List<CodeReference> references = new ArrayList<>();
 
-	public JavaReferenceCollector(JavaReferenceSearch searchEngine, IProgressMonitor monitor) {
+	public JavaReferenceCollector(JavaReferenceSearch searchEngine, JavaElementConverter converter) {
 		this.searchEngine = searchEngine;
+		this.converter = converter;
 	}
 
 	public void collect(ICompilationUnit compilationUnit) throws CoreException {
 		for (IType type : compilationUnit.getTypes()) {
-			anaylzeType(type);
+			recordReferences(type);
 		}
 	}
 
@@ -36,25 +37,26 @@ class JavaReferenceCollector {
 		return references;
 	}
 
-	protected void anaylzeType(IType type) throws CoreException {
+	protected void recordReferences(IType type) throws CoreException {
 		for (IMethod method : type.getMethods()) {
 			if (!method.isMainMethod()) {
-				recordReferences(method, searchEngine.findReferences(method));
+				recordReferences(method);
 			}
 		}
 		for (IField field : type.getFields()) {
-			recordReferences(field, searchEngine.findReferences(field));
+			recordReferences(field);
 		}
 	}
 
-	protected void recordReferences(IJavaElement method, List<IJavaElement> elements) {
-		CodeElement targetElement = CONVERTER.convert(method);
+	protected void recordReferences(IJavaElement element) {
+		CodeElement targetElement = converter.convert(element);
+		List<IJavaElement> referenceElements = searchEngine.findReferences(element);
 
-		if (elements.isEmpty()) {
+		if (referenceElements.isEmpty()) {
 			references.add(new CodeReference(null, targetElement));
 		} else {
-			for (IJavaElement methodReference : elements) {
-				references.add(new CodeReference(CONVERTER.convert(methodReference), targetElement));
+			for (IJavaElement reference : referenceElements) {
+				references.add(new CodeReference(converter.convert(reference), targetElement));
 			}
 		}
 	}
