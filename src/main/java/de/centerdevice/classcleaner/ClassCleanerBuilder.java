@@ -60,7 +60,8 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 	public static final String BUILDER_ID = "ClassCleaner.classCleanerBuilder";
 
 	@Override
-	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
+	protected IProject[] build(int kind, @SuppressWarnings("rawtypes") Map args, IProgressMonitor monitor)
+			throws CoreException {
 		if (kind == FULL_BUILD) {
 			fullBuild(monitor);
 		} else {
