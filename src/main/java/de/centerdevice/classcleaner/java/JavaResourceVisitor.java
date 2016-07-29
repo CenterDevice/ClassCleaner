@@ -9,11 +9,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.text.Document;
 
 import de.centerdevice.classcleaner.ClassCleanerResourceVisitor;
+import de.centerdevice.classcleaner.common.LineNumberProvider;
 import de.centerdevice.classcleaner.core.model.CodeReference;
-import de.centerdevice.classcleaner.java.conversion.JavaElementConverter;
-import de.centerdevice.classcleaner.java.conversion.LineNumberProvider;
 import de.centerdevice.classcleaner.java.search.JavaReferenceSearch;
 
 public class JavaResourceVisitor implements ClassCleanerResourceVisitor {
@@ -23,16 +24,24 @@ public class JavaResourceVisitor implements ClassCleanerResourceVisitor {
 		if (resource.getName().endsWith(".java")) {
 			IJavaElement javaElement = JavaCore.create(resource);
 			if (javaElement instanceof ICompilationUnit) {
-				return collectReferences((ICompilationUnit) javaElement, monitor);
+				return collectReferences((ICompilationUnit) javaElement, new JavaReferenceSearch(monitor));
 			}
 		}
 
 		return new ArrayList<>();
 	}
 
-	protected List<CodeReference> collectReferences(ICompilationUnit javaElement, IProgressMonitor monitor) {
-		JavaElementConverter converter = new JavaElementConverter(new LineNumberProvider(javaElement));
-		return collectReferences(javaElement, new JavaReferenceSearch(monitor), converter);
+	protected List<CodeReference> collectReferences(ICompilationUnit compilationUnit, JavaReferenceSearch search) {
+		return collectReferences(compilationUnit, search,
+				new JavaElementConverter(getLineNumberProvider(compilationUnit)));
+	}
+
+	protected LineNumberProvider getLineNumberProvider(ICompilationUnit compilationUnit) {
+		try {
+			return new LineNumberProvider(new Document(compilationUnit.getSource()));
+		} catch (JavaModelException e) {
+			return null;
+		}
 	}
 
 	protected List<CodeReference> collectReferences(ICompilationUnit javaElement, JavaReferenceSearch searchEngine,

@@ -12,7 +12,6 @@ import org.eclipse.jdt.core.IType;
 
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.CodeReference;
-import de.centerdevice.classcleaner.java.conversion.JavaElementConverter;
 import de.centerdevice.classcleaner.java.search.JavaReferenceSearch;
 
 class JavaReferenceCollector {

@@ -1,15 +1,17 @@
-package de.centerdevice.classcleaner.java.conversion;
+package de.centerdevice.classcleaner.java;
 
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 
+import de.centerdevice.classcleaner.common.LineNumberProvider;
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.FieldElement;
 import de.centerdevice.classcleaner.core.model.MethodElement;
 
-public class JavaElementConverter {
+class JavaElementConverter {
 
 	private LineNumberProvider lineNumberProvider;
 
@@ -37,12 +39,19 @@ public class JavaElementConverter {
 
 	protected FieldElement createFieldElement(IField field) throws JavaModelException {
 		return new FieldElement(getFullyQualifiedClassName(field), field.getElementName(), field.getTypeSignature(),
-				lineNumberProvider.getNewLineNumber(field.getSourceRange()));
+				getLineNumber(field));
 	}
 
 	protected MethodElement createMethodElement(IMethod method) throws JavaModelException {
 		return new MethodElement(getFullyQualifiedClassName(method), method.getElementName(), method.getSignature(),
-				lineNumberProvider.getNewLineNumber(method.getSourceRange()));
+				getLineNumber(method));
+	}
+
+	protected int getLineNumber(IMember element) throws JavaModelException {
+		if (lineNumberProvider == null) {
+			return LineNumberProvider.BAD_LOCATION;
+		}
+		return lineNumberProvider.getLineNumber(element.getSourceRange().getOffset());
 	}
 
 	protected String getFullyQualifiedClassName(IJavaElement element) {
