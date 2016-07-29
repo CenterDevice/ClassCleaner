@@ -1,6 +1,7 @@
 package de.centerdevice.classcleaner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ import de.centerdevice.classcleaner.reporting.ResultReporter;
 
 public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 
-	private List<ClassCleanerResourceVisitor> visitors = new ArrayList<>();
+	private List<ClassCleanerResourceVisitor> visitors = Arrays.asList(new JavaResourceVisitor());
 
 	private ClassMarker marker = new ClassMarker();
 
@@ -31,8 +32,6 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 
 		public SampleDeltaVisitor(IProgressMonitor monitor) {
 			this.monitor = monitor;
-
-			visitors.add(new JavaResourceVisitor());
 		}
 
 		@Override
@@ -88,15 +87,24 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 		if (resource instanceof IFile) {
 			ReferenceClustering clustering = new ReferenceClustering();
 			ResultReporter reporter = new ResultReporter(marker);
+
 			reporter.clean((IFile) resource);
-			for (ClassCleanerResourceVisitor visitor : visitors) {
-				List<CodeReference> references = visitor.visit((IFile) resource, monitor);
-				for (CodeReference codeReference : references) {
-					clustering.addReference(codeReference);
-				}
-				reporter.report((IFile) resource, references);
+			List<CodeReference> references = getAllReferences((IFile) resource, monitor);
+			for (CodeReference codeReference : references) {
+				clustering.addReference(codeReference);
 			}
+
+			reporter.report((IFile) resource, references);
+			System.out.println(clustering.getReferenceGroups());
 		}
+	}
+
+	protected List<CodeReference> getAllReferences(IFile resource, IProgressMonitor monitor) {
+		List<CodeReference> references = new ArrayList<>();
+		for (ClassCleanerResourceVisitor visitor : visitors) {
+			references.addAll(visitor.visit(resource, monitor));
+		}
+		return references;
 	}
 
 	protected void fullBuild(final IProgressMonitor monitor) throws CoreException {

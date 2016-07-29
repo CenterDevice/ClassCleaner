@@ -17,6 +17,7 @@ public class ClassMarker {
 		try {
 			file.deleteMarkers(MARKER_TYPE, false, IResource.DEPTH_ZERO);
 		} catch (CoreException ce) {
+			ce.printStackTrace();
 		}
 	}
 

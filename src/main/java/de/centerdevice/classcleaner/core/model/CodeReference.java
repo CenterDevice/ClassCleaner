@@ -20,6 +20,13 @@ public class CodeReference {
 
 	@Override
 	public String toString() {
-		return src.getClassName() + " -> " + dst.getClassName();
+		return getClassNameWithFallback(src) + " -> " + getClassNameWithFallback(dst);
+	}
+
+	protected String getClassNameWithFallback(CodeElement element) {
+		if (element == null) {
+			return "none";
+		}
+		return element.getClassName();
 	}
 }
