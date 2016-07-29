@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
@@ -14,6 +15,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import de.centerdevice.classcleaner.java.JavaResourceVisitor;
+import de.centerdevice.classcleaner.reporting.ClassMarker;
+import de.centerdevice.classcleaner.reporting.ResultReporter;
 
 public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 
@@ -80,7 +83,13 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 	}
 
 	void checkResource(IResource resource, IProgressMonitor monitor) {
-		visitors.forEach(v -> v.visit(resource, monitor));
+		if (resource instanceof IFile) {
+			ResultReporter reporter = new ResultReporter(marker);
+			reporter.clean((IFile) resource);
+			for (ClassCleanerResourceVisitor visitor : visitors) {
+				reporter.report((IFile) resource, visitor.visit((IFile) resource, monitor));
+			}
+		}
 	}
 
 	protected void fullBuild(final IProgressMonitor monitor) throws CoreException {

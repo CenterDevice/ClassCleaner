@@ -1,4 +1,4 @@
-package de.centerdevice.classcleaner;
+package de.centerdevice.classcleaner.reporting;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
