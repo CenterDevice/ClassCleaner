@@ -17,6 +17,12 @@
 		          <source>1.8</source>
 		          <target>1.8</target>
 		        </configuration>
+		        <executions>
+	                <execution>
+	                    <id>default-compile</id>
+	                    <phase>none</phase>
+	                </execution>
+            	</executions>
 	      	</plugin>
 			<plugin>
 		        <artifactId>maven-eclipse-plugin</artifactId>
@@ -31,4 +37,7 @@
 		</plugins>
 	</build>	
 
+	<dependencies>
+
+	</dependencies>
 </project>
