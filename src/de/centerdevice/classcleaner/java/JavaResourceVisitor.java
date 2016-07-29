@@ -17,8 +17,8 @@ import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 
-import de.centerdevice.classcleaner.ClassMarker;
 import de.centerdevice.classcleaner.ClassCleanerResourceVisitor;
+import de.centerdevice.classcleaner.ClassMarker;
 
 public class JavaResourceVisitor implements ClassCleanerResourceVisitor {
 
@@ -53,7 +53,9 @@ public class JavaResourceVisitor implements ClassCleanerResourceVisitor {
 
 	protected void anaylzeType(IProgressMonitor monitor, IType type) throws JavaModelException, CoreException {
 		for (IMethod method : type.getMethods()) {
-			findReferences(method, monitor);
+			if (!method.isMainMethod()) {
+				findReferences(method, monitor);
+			}
 		}
 		for (IField method : type.getFields()) {
 			findReferences(method, monitor);
@@ -61,8 +63,15 @@ public class JavaResourceVisitor implements ClassCleanerResourceVisitor {
 	}
 
 	protected void findReferences(IJavaElement method, IProgressMonitor monitor) throws CoreException {
+		MethodReferenceCollector methodReferenceCollector = new MethodReferenceCollector();
 		searchEngine.search(getPattern(method), new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() },
-				getSearchScope(), new JavaSearchRequestor(), monitor);
+				getSearchScope(), methodReferenceCollector, monitor);
+
+		if (methodReferenceCollector.getReferences().isEmpty()) {
+			System.out.println(method + " has no references");
+		} else {
+			System.out.println(methodReferenceCollector.getReferences());
+		}
 	}
 
 	protected SearchPattern getPattern(IJavaElement method) {
