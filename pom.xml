@@ -34,10 +34,29 @@
 			    	</classpathContainers>
 		        </configuration>
 		      </plugin>
+		      <plugin>
+	            <artifactId>maven-dependency-plugin</artifactId>
+	            <executions>
+	              <execution>
+	                <id>copy-dependencies</id>
+		            <phase>process-sources</phase>
+		            <goals>
+		              <goal>copy-dependencies</goal>
+		            </goals>
+	                <configuration>
+	                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
+	                </configuration>
+	              </execution>
+	            </executions>
+	          </plugin>
 		</plugins>
 	</build>	
 
 	<dependencies>
-
+		<dependency>
+			  <groupId>org.jgrapht</groupId>
+			  <artifactId>jgrapht-core</artifactId>
+			  <version>0.9.2</version>
+		</dependency>
 	</dependencies>
 </project>

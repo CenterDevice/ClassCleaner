@@ -14,6 +14,8 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import de.centerdevice.classcleaner.core.engine.ReferenceClustering;
+import de.centerdevice.classcleaner.core.model.CodeReference;
 import de.centerdevice.classcleaner.java.JavaResourceVisitor;
 import de.centerdevice.classcleaner.reporting.ClassMarker;
 import de.centerdevice.classcleaner.reporting.ResultReporter;
@@ -84,10 +86,15 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 
 	void checkResource(IResource resource, IProgressMonitor monitor) {
 		if (resource instanceof IFile) {
+			ReferenceClustering clustering = new ReferenceClustering();
 			ResultReporter reporter = new ResultReporter(marker);
 			reporter.clean((IFile) resource);
 			for (ClassCleanerResourceVisitor visitor : visitors) {
-				reporter.report((IFile) resource, visitor.visit((IFile) resource, monitor));
+				List<CodeReference> references = visitor.visit((IFile) resource, monitor);
+				for (CodeReference codeReference : references) {
+					clustering.addReference(codeReference);
+				}
+				reporter.report((IFile) resource, references);
 			}
 		}
 	}
