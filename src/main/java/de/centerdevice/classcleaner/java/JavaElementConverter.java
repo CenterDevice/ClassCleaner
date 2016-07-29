@@ -54,9 +54,7 @@ class JavaElementConverter {
 		return lineNumberProvider.getLineNumber(element.getSourceRange().getOffset());
 	}
 
-	protected String getFullyQualifiedClassName(IJavaElement element) {
-		IJavaElement packageFragment = element.getAncestor(IJavaElement.PACKAGE_FRAGMENT);
-		IJavaElement type = element.getAncestor(IJavaElement.TYPE);
-		return packageFragment.getElementName() + "." + type.getElementName();
+	protected String getFullyQualifiedClassName(IMember member) {
+		return member.getDeclaringType().getFullyQualifiedName();
 	}
 }
