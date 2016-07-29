@@ -9,7 +9,7 @@ import org.eclipse.jdt.core.search.MethodReferenceMatch;
 import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jdt.core.search.SearchRequestor;
 
-public class MethodReferenceCollector extends SearchRequestor {
+public class SearchReferenceCollector extends SearchRequestor {
 
 	private final List<IJavaElement> references = new ArrayList<>();
 

@@ -27,7 +27,7 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 		public SampleDeltaVisitor(IProgressMonitor monitor) {
 			this.monitor = monitor;
 
-			visitors.add(new JavaResourceVisitor(marker));
+			visitors.add(new JavaResourceVisitor());
 		}
 
 		@Override
