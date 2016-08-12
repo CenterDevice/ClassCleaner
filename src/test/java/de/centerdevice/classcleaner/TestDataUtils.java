@@ -14,9 +14,18 @@ public class TestDataUtils {
 	}
 
 	public static CodeReference getReference(String fromMethod, int fromLine, String toMethod, int toLine) {
-		MethodElement from = (fromMethod != null) ? new MethodElement(CLASS_NAME, fromMethod, SIGNATURE, fromLine)
+		return getReference(CLASS_NAME, fromMethod, fromLine, CLASS_NAME, toMethod, toLine);
+	}
+
+	public static CodeReference getReference(String fromClass, String fromMethod, String toClass, String toMethod) {
+		return getReference(fromClass, fromMethod, DUMMY_LINE, toClass, toMethod, DUMMY_LINE);
+	}
+
+	public static CodeReference getReference(String fromClass, String fromMethod, int fromLine, String toClass,
+			String toMethod, int toLine) {
+		MethodElement from = (fromMethod != null) ? new MethodElement(fromClass, fromMethod, SIGNATURE, fromLine)
 				: null;
-		MethodElement to = (toMethod != null) ? new MethodElement(CLASS_NAME, toMethod, SIGNATURE, toLine) : null;
+		MethodElement to = (toMethod != null) ? new MethodElement(toClass, toMethod, SIGNATURE, toLine) : null;
 
 		return new CodeReference(from, to);
 	}
