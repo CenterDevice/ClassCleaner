@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IMarker;
 
-import de.centerdevice.classcleaner.core.engine.ReferenceClustering;
+import de.centerdevice.classcleaner.core.engine.ReferenceGraph;
 import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.Issue;
@@ -22,7 +22,7 @@ public class ForeignMethodAnalyzer implements ReferenceAnalyzer {
 		List<Issue> issues = new ArrayList<>();
 
 		for (ClassInfo classInfo : report.getClasses()) {
-			ReferenceClustering graph = report.getClustering(classInfo);
+			ReferenceGraph graph = report.getReferenceGraph(classInfo);
 
 			for (CodeElement codeElement : graph.getAllElements()) {
 				if (codeElement.getClassName().equals(classInfo.getName())) {

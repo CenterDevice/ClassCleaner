@@ -14,10 +14,10 @@ import org.jgrapht.graph.DefaultEdge;
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.CodeReference;
 
-public class ReferenceClustering {
+public class ReferenceGraph {
 	DirectedGraph<CodeElement, DefaultEdge> directedGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
 
-	public ReferenceClustering(Collection<CodeReference> reference) {
+	public ReferenceGraph(Collection<CodeReference> reference) {
 		addReferences(reference);
 	}
 

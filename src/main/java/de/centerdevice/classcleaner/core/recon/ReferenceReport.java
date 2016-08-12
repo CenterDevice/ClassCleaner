@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.centerdevice.classcleaner.core.engine.ReferenceClustering;
+import de.centerdevice.classcleaner.core.engine.ReferenceGraph;
 import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeReference;
 import de.centerdevice.classcleaner.core.model.ReferenceScope;
@@ -13,12 +13,12 @@ import de.centerdevice.classcleaner.core.model.ReferenceScope;
 public class ReferenceReport {
 	private final ReferenceScope scope;
 	private final Map<ClassInfo, List<CodeReference>> references;
-	private final Map<ClassInfo, ReferenceClustering> clusterings;
+	private final Map<ClassInfo, ReferenceGraph> graphs;
 
 	public ReferenceReport(ReferenceScope scope, Map<ClassInfo, List<CodeReference>> references) {
 		this.scope = scope;
 		this.references = references;
-		this.clusterings = new HashMap<>();
+		this.graphs = new HashMap<>();
 	}
 
 	public ReferenceScope getScope() {
@@ -33,17 +33,17 @@ public class ReferenceReport {
 		return references.keySet();
 	}
 
-	public ReferenceClustering getClustering(ClassInfo classInfo) {
-		if (clusterings.containsKey(classInfo)) {
-			return clusterings.get(classInfo);
+	public ReferenceGraph getReferenceGraph(ClassInfo classInfo) {
+		if (graphs.containsKey(classInfo)) {
+			return graphs.get(classInfo);
 		}
 
-		ReferenceClustering createClustering = createClustering(classInfo);
-		clusterings.put(classInfo, createClustering);
-		return createClustering;
+		ReferenceGraph graph = createGraph(classInfo);
+		graphs.put(classInfo, graph);
+		return graph;
 	}
 
-	private ReferenceClustering createClustering(ClassInfo classInfo) {
-		return new ReferenceClustering(getReferences(classInfo));
+	private ReferenceGraph createGraph(ClassInfo classInfo) {
+		return new ReferenceGraph(getReferences(classInfo));
 	}
 }

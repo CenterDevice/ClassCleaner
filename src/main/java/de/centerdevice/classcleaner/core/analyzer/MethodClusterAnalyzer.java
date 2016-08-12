@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
 
-import de.centerdevice.classcleaner.core.engine.ReferenceClustering;
+import de.centerdevice.classcleaner.core.engine.ReferenceGraph;
 import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.Issue;
@@ -28,7 +28,7 @@ public class MethodClusterAnalyzer implements ReferenceAnalyzer {
 	}
 
 	protected List<Issue> analyzeIssuesForClass(ReferenceReport report, ClassInfo classInfo) {
-		ReferenceClustering clustering = report.getClustering(classInfo);
+		ReferenceGraph clustering = report.getReferenceGraph(classInfo);
 		List<Set<CodeElement>> referenceGroups = clustering.getReferenceGroups();
 		List<Issue> issues = new ArrayList<>();
 		if (referenceGroups.size() > 1) {
