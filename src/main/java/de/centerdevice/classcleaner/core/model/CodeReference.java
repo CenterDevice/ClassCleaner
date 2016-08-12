@@ -2,8 +2,8 @@ package de.centerdevice.classcleaner.core.model;
 
 public class CodeReference {
 
-	private CodeElement src;
-	private CodeElement dst;
+	private final CodeElement src;
+	private final CodeElement dst;
 
 	public CodeReference(CodeElement src, CodeElement dst) {
 		this.src = src;
@@ -27,6 +27,6 @@ public class CodeReference {
 		if (element == null) {
 			return "none";
 		}
-		return element.getClassName();
+		return element.toString();
 	}
 }
