@@ -1,5 +1,7 @@
 package de.centerdevice.classcleaner.reporting;
 
+import java.util.Collection;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -20,6 +22,12 @@ public class ClassMarker {
 			file.deleteMarkers(MARKER_TYPE, false, IResource.DEPTH_ZERO);
 		} catch (CoreException ce) {
 			ce.printStackTrace();
+		}
+	}
+
+	public void addMarker(IFile file, Collection<Issue> issues) {
+		for (Issue issue : issues) {
+			addMarker(file, issue);
 		}
 	}
 

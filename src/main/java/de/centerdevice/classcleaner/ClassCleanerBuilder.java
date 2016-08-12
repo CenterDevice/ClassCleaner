@@ -1,5 +1,6 @@
 package de.centerdevice.classcleaner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +15,8 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import de.centerdevice.classcleaner.core.analyzer.MethodClusterAnalyser;
 import de.centerdevice.classcleaner.core.analyzer.UnusedMethodAnalyser;
-import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.Issue;
 import de.centerdevice.classcleaner.core.recon.ReferenceReport;
 import de.centerdevice.classcleaner.core.recon.ReferenceReporter;
@@ -24,12 +25,12 @@ import de.centerdevice.classcleaner.reporting.ClassMarker;
 
 public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 
-	private ReferenceReporter reporter = new ReferenceReporter(Arrays.asList(new JavaReferenceFindingVisitor()));
+	private final ReferenceReporter reporter = new ReferenceReporter(Arrays.asList(new JavaReferenceFindingVisitor()));
 
-	private ClassMarker marker = new ClassMarker();
+	private final ClassMarker marker = new ClassMarker();
 
 	class SampleDeltaVisitor implements IResourceDeltaVisitor {
-		private IProgressMonitor monitor;
+		private final IProgressMonitor monitor;
 
 		public SampleDeltaVisitor(IProgressMonitor monitor) {
 			this.monitor = monitor;
@@ -50,12 +51,13 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 	}
 
 	class SampleResourceVisitor implements IResourceVisitor {
-		private IProgressMonitor monitor;
+		private final IProgressMonitor monitor;
 
 		public SampleResourceVisitor(IProgressMonitor monitor) {
 			this.monitor = monitor;
 		}
 
+		@Override
 		public boolean visit(IResource resource) {
 			checkResource(resource, monitor);
 			return true;
@@ -80,6 +82,7 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 		return null;
 	}
 
+	@Override
 	protected void clean(IProgressMonitor monitor) throws CoreException {
 		marker.clean(getProject());
 	}
@@ -94,15 +97,11 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 		marker.deleteMarkers(resource);
 
 		ReferenceReport report = reporter.createReport(resource, monitor);
-		List<Issue> issues = new UnusedMethodAnalyser().analyze(report);
+		List<Issue> issues = new ArrayList<>();
+		issues.addAll(new UnusedMethodAnalyser().analyze(report));
+		issues.addAll(new MethodClusterAnalyser().analyze(report));
 
-		for (Issue issue : issues) {
-			marker.addMarker(resource, issue);
-		}
-
-		for (ClassInfo classInfo : report.getClasses()) {
-			System.out.println(report.getClustering(classInfo).getReferenceGroups());
-		}
+		marker.addMarker(resource, issues);
 	}
 
 	protected void fullBuild(final IProgressMonitor monitor) throws CoreException {
