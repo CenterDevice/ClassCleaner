@@ -27,7 +27,7 @@ public class UnusedMethodAnalyzerTest {
 
 	@Before
 	public void setUp() {
-		analyzer = new UnusedMethodAnalyser();
+		analyzer = new UnusedMethodAnalyzer();
 		references = new HashMap<>();
 	}
 

@@ -23,7 +23,7 @@ public class MethodClusterAnalyzerTest {
 
 	@Before
 	public void setUp() {
-		analyzer = new MethodClusterAnalyser();
+		analyzer = new MethodClusterAnalyzer();
 		references = new HashMap<>();
 	}
 

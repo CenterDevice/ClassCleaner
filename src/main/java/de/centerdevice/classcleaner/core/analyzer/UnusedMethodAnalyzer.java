@@ -11,7 +11,7 @@ import de.centerdevice.classcleaner.core.model.CodeReference;
 import de.centerdevice.classcleaner.core.model.Issue;
 import de.centerdevice.classcleaner.core.recon.ReferenceReport;
 
-public class UnusedMethodAnalyser implements ReferenceAnalyzer {
+public class UnusedMethodAnalyzer implements ReferenceAnalyzer {
 
 	private static final int SEVERITY = IMarker.SEVERITY_INFO;
 

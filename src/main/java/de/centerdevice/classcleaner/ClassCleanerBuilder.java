@@ -15,8 +15,8 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import de.centerdevice.classcleaner.core.analyzer.MethodClusterAnalyser;
-import de.centerdevice.classcleaner.core.analyzer.UnusedMethodAnalyser;
+import de.centerdevice.classcleaner.core.analyzer.MethodClusterAnalyzer;
+import de.centerdevice.classcleaner.core.analyzer.UnusedMethodAnalyzer;
 import de.centerdevice.classcleaner.core.model.Issue;
 import de.centerdevice.classcleaner.core.recon.ReferenceReport;
 import de.centerdevice.classcleaner.core.recon.ReferenceReporter;
@@ -98,8 +98,8 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 
 		ReferenceReport report = reporter.createReport(resource, monitor);
 		List<Issue> issues = new ArrayList<>();
-		issues.addAll(new UnusedMethodAnalyser().analyze(report));
-		issues.addAll(new MethodClusterAnalyser().analyze(report));
+		issues.addAll(new UnusedMethodAnalyzer().analyze(report));
+		issues.addAll(new MethodClusterAnalyzer().analyze(report));
 
 		marker.addMarker(resource, issues);
 	}
