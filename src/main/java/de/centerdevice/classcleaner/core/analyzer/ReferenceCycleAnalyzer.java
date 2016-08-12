@@ -1,7 +1,6 @@
 package de.centerdevice.classcleaner.core.analyzer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
@@ -15,8 +14,8 @@ import de.centerdevice.classcleaner.core.recon.ReferenceReport;
 public class ReferenceCycleAnalyzer implements ReferenceAnalyzer {
 
 	@Override
-	public List<Issue> analyze(ReferenceReport report) {
-		List<Issue> issues = new ArrayList<>();
+	public Set<Issue> analyze(ReferenceReport report) {
+		Set<Issue> issues = new HashSet<>();
 
 		for (ClassInfo classInfo : report.getClasses()) {
 			ReferenceGraph graph = report.getReferenceGraph(classInfo);

@@ -1,10 +1,10 @@
 package de.centerdevice.classcleaner.core.analyzer;
 
-import java.util.List;
+import java.util.Set;
 
 import de.centerdevice.classcleaner.core.model.Issue;
 import de.centerdevice.classcleaner.core.recon.ReferenceReport;
 
 public interface ReferenceAnalyzer {
-	public List<Issue> analyze(ReferenceReport report);
+	public Set<Issue> analyze(ReferenceReport report);
 }

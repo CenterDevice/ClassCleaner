@@ -1,6 +1,7 @@
 package de.centerdevice.classcleaner.core.analyzer;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,8 +18,8 @@ public class MethodClusterAnalyzer implements ReferenceAnalyzer {
 	private static final int SEVERITY = IMarker.SEVERITY_INFO;
 
 	@Override
-	public List<Issue> analyze(ReferenceReport report) {
-		List<Issue> issues = new ArrayList<>();
+	public Set<Issue> analyze(ReferenceReport report) {
+		Set<Issue> issues = new HashSet<>();
 
 		for (ClassInfo classInfo : report.getClasses()) {
 			issues.addAll(analyzeIssuesForClass(report, classInfo));

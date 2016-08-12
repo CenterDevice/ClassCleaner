@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class MethodClusterAnalyzerTest {
 
 	@Test
 	public void TestAnalyzeEmptyReport() {
-		List<Issue> issues = runAnalyzer();
+		Set<Issue> issues = runAnalyzer();
 		assertTrue(issues.isEmpty());
 	}
 
@@ -37,7 +38,7 @@ public class MethodClusterAnalyzerTest {
 	public void TestAnalyzeTwoReferringMethods() {
 		references.put(getClassInfo(), asList(getReference("fromMethod", "toMethod")));
 
-		List<Issue> issues = runAnalyzer();
+		Set<Issue> issues = runAnalyzer();
 		assertTrue(issues.isEmpty());
 	}
 
@@ -45,7 +46,7 @@ public class MethodClusterAnalyzerTest {
 	public void TestAnalyzeMultipleReferringMethods() {
 		references.put(getClassInfo(), asList(getReference("m1", "m2"), getReference("m2", "m3")));
 
-		List<Issue> issues = runAnalyzer();
+		Set<Issue> issues = runAnalyzer();
 		assertTrue(issues.isEmpty());
 	}
 
@@ -53,11 +54,11 @@ public class MethodClusterAnalyzerTest {
 	public void TestAnalyzeMethodClusters() {
 		references.put(getClassInfo(), asList(getReference("m1", "m2"), getReference("m3", "m4")));
 
-		List<Issue> issues = runAnalyzer();
+		Set<Issue> issues = runAnalyzer();
 		assertTrue(issues.size() == 2);
 	}
 
-	protected List<Issue> runAnalyzer() {
+	protected Set<Issue> runAnalyzer() {
 		return analyzer.analyze(new ReferenceReport(ReferenceScope.Project, references));
 	}
 }

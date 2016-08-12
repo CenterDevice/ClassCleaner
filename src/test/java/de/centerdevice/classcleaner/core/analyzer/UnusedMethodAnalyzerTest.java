@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class UnusedMethodAnalyzerTest {
 
 	@Test
 	public void TestAnalyzeEmptyReport() {
-		List<Issue> issues = runAnalyzer();
+		Set<Issue> issues = runAnalyzer();
 		assertTrue(issues.isEmpty());
 	}
 
@@ -41,16 +42,16 @@ public class UnusedMethodAnalyzerTest {
 	public void TestAnalyzeSingleUnusedMethod() {
 		references.put(new ClassInfo(CLASS_NAME, 1), asList(getReference(null, 0, "method", UNUSED_LINE)));
 
-		List<Issue> issues = runAnalyzer();
+		Set<Issue> issues = runAnalyzer();
 		assertTrue(issues.size() == 1);
-		assertEquals(UNUSED_LINE, issues.get(0).getLineNumber());
+		assertEquals(UNUSED_LINE, issues.iterator().next().getLineNumber());
 	}
 
 	@Test
 	public void TestAnalyzeSingleUsedMethod() {
 		references.put(getClassInfo(), asList(getReference("fromMethod", "toMethod")));
 
-		List<Issue> issues = runAnalyzer();
+		Set<Issue> issues = runAnalyzer();
 		assertTrue(issues.isEmpty());
 	}
 
@@ -59,12 +60,12 @@ public class UnusedMethodAnalyzerTest {
 		references.put(getClassInfo(),
 				asList(getReference("fromMethod", "toMethod"), getReference(null, 0, "unused", UNUSED_LINE)));
 
-		List<Issue> issues = runAnalyzer();
+		Set<Issue> issues = runAnalyzer();
 		assertTrue(issues.size() == 1);
-		assertEquals(UNUSED_LINE, issues.get(0).getLineNumber());
+		assertEquals(UNUSED_LINE, issues.iterator().next().getLineNumber());
 	}
 
-	protected List<Issue> runAnalyzer() {
+	protected Set<Issue> runAnalyzer() {
 		return analyzer.analyze(new ReferenceReport(ReferenceScope.Project, references));
 	}
 }

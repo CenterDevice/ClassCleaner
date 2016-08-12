@@ -1,9 +1,9 @@
 package de.centerdevice.classcleaner;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -97,7 +97,7 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 		marker.deleteMarkers(resource);
 
 		ReferenceReport report = reporter.createReport(resource, monitor);
-		List<Issue> issues = new ArrayList<>();
+		Set<Issue> issues = new HashSet<>();
 		issues.addAll(new UnusedMethodAnalyzer().analyze(report));
 		issues.addAll(new MethodClusterAnalyzer().analyze(report));
 

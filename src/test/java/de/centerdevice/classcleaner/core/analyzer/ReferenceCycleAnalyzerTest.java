@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class ReferenceCycleAnalyzerTest {
 
 	@Test
 	public void TestAnalyzeEmptyReport() {
-		List<Issue> issues = runAnalyzer();
+		Set<Issue> issues = runAnalyzer();
 		assertTrue(issues.isEmpty());
 	}
 
@@ -37,7 +38,7 @@ public class ReferenceCycleAnalyzerTest {
 	public void TestAnalyzeReferringMethodsInSameClass() {
 		references.put(getClassInfo(), asList(getReference("fromMethod", "toMethod")));
 
-		List<Issue> issues = runAnalyzer();
+		Set<Issue> issues = runAnalyzer();
 		assertTrue(issues.isEmpty());
 	}
 
@@ -45,7 +46,7 @@ public class ReferenceCycleAnalyzerTest {
 	public void TestAnalyzeMethodOnlyReferredToByOtherClass() {
 		references.put(getClassInfo("toClass"), asList(getReference("fromClass", "method", "toClass", "method")));
 
-		List<Issue> issues = runAnalyzer();
+		Set<Issue> issues = runAnalyzer();
 		assertTrue(issues.size() == 1);
 	}
 
@@ -54,11 +55,11 @@ public class ReferenceCycleAnalyzerTest {
 		references.put(getClassInfo("toClass"), asList(getReference("fromClass", "method", "toClass", "method"),
 				getReference("toClass", "method", "toClass", "method2")));
 
-		List<Issue> issues = runAnalyzer();
+		Set<Issue> issues = runAnalyzer();
 		assertTrue(issues.isEmpty());
 	}
 
-	protected List<Issue> runAnalyzer() {
+	protected Set<Issue> runAnalyzer() {
 		return analyzer.analyze(new ReferenceReport(ReferenceScope.Project, references));
 	}
 }
