@@ -42,7 +42,7 @@ public class MethodClusterAnalyser implements ReferenceAnalyzer {
 	protected String getMessage(Set<CodeElement> set) {
 		StringBuilder classSuggestion = new StringBuilder("Consider extracting class with methods: ");
 		for (CodeElement codeElement : set) {
-			classSuggestion.append(" " + codeElement.getElementName());
+			classSuggestion.append(" " + codeElement.toSimpleString());
 		}
 		return classSuggestion.toString();
 	}
