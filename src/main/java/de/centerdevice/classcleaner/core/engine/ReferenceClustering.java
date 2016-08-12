@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;
+import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -36,6 +37,12 @@ public class ReferenceClustering {
 		directedGraph.addVertex(source);
 		directedGraph.addVertex(destination);
 		directedGraph.addEdge(source, destination);
+	}
+
+	public Set<CodeElement> getCycles() {
+		CycleDetector<CodeElement, DefaultEdge> cycleDetector = new CycleDetector<>(directedGraph);
+
+		return cycleDetector.findCycles();
 	}
 
 	public Set<CodeElement> getAllElements() {

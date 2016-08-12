@@ -17,13 +17,13 @@ import de.centerdevice.classcleaner.core.model.Issue;
 import de.centerdevice.classcleaner.core.model.ReferenceScope;
 import de.centerdevice.classcleaner.core.recon.ReferenceReport;
 
-public class ForeignMethodAnalyzerTest {
+public class ReferenceCycleAnalyzerTest {
 	private HashMap<ClassInfo, List<CodeReference>> references;
 	private ReferenceAnalyzer analyzer;
 
 	@Before
 	public void setUp() {
-		analyzer = new ReferenceCycleAnalyzer();
+		analyzer = new ForeignMethodAnalyzer();
 		references = new HashMap<>();
 	}
 
@@ -42,20 +42,20 @@ public class ForeignMethodAnalyzerTest {
 	}
 
 	@Test
-	public void TestAnalyzeDirectCycle() {
-		references.put(getClassInfo("toClass"), asList(getReference("m1", "m2"), getReference("m2", "m1")));
+	public void TestAnalyzeMethodOnlyReferredToByOtherClass() {
+		references.put(getClassInfo("toClass"), asList(getReference("fromClass", "method", "toClass", "method")));
 
 		List<Issue> issues = runAnalyzer();
-		assertTrue(issues.size() == 2);
+		assertTrue(issues.size() == 1);
 	}
 
 	@Test
-	public void TestAnalyzeIndirectCycle() {
-		references.put(getClassInfo("toClass"),
-				asList(getReference("m1", "m2"), getReference("m2", "m3"), getReference("m3", "m1")));
+	public void TestAnalyzeMethodThatReferencesOtherClassMethod() {
+		references.put(getClassInfo("toClass"), asList(getReference("fromClass", "method", "toClass", "method"),
+				getReference("toClass", "method", "toClass", "method2")));
 
 		List<Issue> issues = runAnalyzer();
-		assertTrue(issues.size() == 3);
+		assertTrue(issues.isEmpty());
 	}
 
 	protected List<Issue> runAnalyzer() {

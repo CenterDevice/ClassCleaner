@@ -22,4 +22,9 @@ public class Issue {
 	public int getSeverity() {
 		return severity;
 	}
+
+	@Override
+	public String toString() {
+		return getLineNumber() + ": " + getMessage() + " (" + getSeverity() + ")";
+	}
 }
