@@ -1,29 +1,40 @@
 package de.centerdevice.classcleaner.core.model;
 
+import java.util.Collections;
+import java.util.List;
+
 public class MethodElement extends CodeElement {
 
-	private final String signature;
+	private final List<String> parameters;
 
-	public MethodElement(String className, String methodName, String signature, int line) {
+	public MethodElement(String className, String methodName, List<String> parameters, int line) {
 		super(className, methodName, line);
-		this.signature = signature;
+		this.parameters = Collections.unmodifiableList(parameters);
+	}
+
+	public List<String> getParameters() {
+		return parameters;
+	}
+
+	public String getSignature() {
+		return "(" + String.join(";", parameters) + ")";
 	}
 
 	@Override
 	public String toSimpleString() {
-		return super.toSimpleString() + signature;
+		return super.toSimpleString() + getSignature();
 	}
 
 	@Override
 	public String toString() {
-		return super.toString() + signature;
+		return super.toString() + getSignature();
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((signature == null) ? 0 : signature.hashCode());
+		result = prime * result + ((parameters == null) ? 0 : parameters.hashCode());
 		return result;
 	}
 
@@ -39,11 +50,11 @@ public class MethodElement extends CodeElement {
 			return false;
 		}
 		MethodElement other = (MethodElement) obj;
-		if (signature == null) {
-			if (other.signature != null) {
+		if (parameters == null) {
+			if (other.parameters != null) {
 				return false;
 			}
-		} else if (!signature.equals(other.signature)) {
+		} else if (!parameters.equals(other.parameters)) {
 			return false;
 		}
 		return true;
