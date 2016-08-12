@@ -1,5 +1,6 @@
 package de.centerdevice.classcleaner.core.engine;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -15,7 +16,17 @@ public class ReferenceClustering {
 	DirectedGraph<CodeElement, DefaultEdge> directedGraph = new DefaultDirectedGraph<CodeElement, DefaultEdge>(
 			DefaultEdge.class);
 
-	public void addReference(CodeReference reference) {
+	public ReferenceClustering(Collection<CodeReference> reference) {
+		addReferences(reference);
+	}
+
+	private void addReferences(Collection<CodeReference> reference) {
+		for (CodeReference codeReference : reference) {
+			addReference(codeReference);
+		}
+	}
+
+	private void addReference(CodeReference reference) {
 		if (reference.getSource() != null && reference.getDestination() != null) {
 			addReference(reference.getSource(), reference.getDestination());
 		}

@@ -12,12 +12,12 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.Document;
 
-import de.centerdevice.classcleaner.ClassCleanerResourceVisitor;
 import de.centerdevice.classcleaner.common.LineNumberProvider;
 import de.centerdevice.classcleaner.core.model.CodeReference;
+import de.centerdevice.classcleaner.core.recon.ReferenceFinderVisitor;
 import de.centerdevice.classcleaner.java.search.JavaReferenceSearch;
 
-public class JavaResourceVisitor implements ClassCleanerResourceVisitor {
+public class JavaReferenceFinderVisitor implements ReferenceFinderVisitor {
 
 	@Override
 	public List<CodeReference> visit(IFile resource, IProgressMonitor monitor) {

@@ -1,6 +1,5 @@
 package de.centerdevice.classcleaner;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -15,15 +14,16 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import de.centerdevice.classcleaner.core.engine.ReferenceClustering;
-import de.centerdevice.classcleaner.core.model.CodeReference;
-import de.centerdevice.classcleaner.java.JavaResourceVisitor;
+import de.centerdevice.classcleaner.core.analyzer.UnusedMethodAnalyser;
+import de.centerdevice.classcleaner.core.model.Issue;
+import de.centerdevice.classcleaner.core.recon.ReferenceReport;
+import de.centerdevice.classcleaner.core.recon.ReferenceReporter;
+import de.centerdevice.classcleaner.java.JavaReferenceFinderVisitor;
 import de.centerdevice.classcleaner.reporting.ClassMarker;
-import de.centerdevice.classcleaner.reporting.ResultReporter;
 
 public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 
-	private List<ClassCleanerResourceVisitor> visitors = Arrays.asList(new JavaResourceVisitor());
+	private ReferenceReporter reporter = new ReferenceReporter(Arrays.asList(new JavaReferenceFinderVisitor()));
 
 	private ClassMarker marker = new ClassMarker();
 
@@ -85,26 +85,24 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 
 	void checkResource(IResource resource, IProgressMonitor monitor) {
 		if (resource instanceof IFile) {
-			ReferenceClustering clustering = new ReferenceClustering();
-			ResultReporter reporter = new ResultReporter(marker);
-
-			reporter.clean((IFile) resource);
-			List<CodeReference> references = getAllReferences((IFile) resource, monitor);
-			for (CodeReference codeReference : references) {
-				clustering.addReference(codeReference);
-			}
-
-			reporter.report((IFile) resource, references);
-			System.out.println(clustering.getReferenceGroups());
+			analyze((IFile) resource, monitor);
 		}
 	}
 
-	protected List<CodeReference> getAllReferences(IFile resource, IProgressMonitor monitor) {
-		List<CodeReference> references = new ArrayList<>();
-		for (ClassCleanerResourceVisitor visitor : visitors) {
-			references.addAll(visitor.visit(resource, monitor));
+	protected void analyze(IFile resource, IProgressMonitor monitor) {
+
+		marker.deleteMarkers(resource);
+
+		ReferenceReport report = reporter.createReport(resource, monitor);
+
+		UnusedMethodAnalyser analyzer = new UnusedMethodAnalyser();
+		List<Issue> issues = analyzer.analyze(report);
+
+		for (Issue issue : issues) {
+			marker.addMarker(resource, issue);
 		}
-		return references;
+
+		System.out.println(report.getClustering().getReferenceGroups());
 	}
 
 	protected void fullBuild(final IProgressMonitor monitor) throws CoreException {
