@@ -4,9 +4,12 @@ import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.ISourceRange;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 
 import de.centerdevice.classcleaner.common.LineNumberProvider;
+import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.FieldElement;
 import de.centerdevice.classcleaner.core.model.MethodElement;
@@ -22,6 +25,14 @@ class JavaElementConverter {
 	public CodeElement convert(IJavaElement element) {
 		try {
 			return createCodeElement(element);
+		} catch (JavaModelException e) {
+			return null;
+		}
+	}
+
+	public ClassInfo convert(IType type) {
+		try {
+			return new ClassInfo(type.getFullyQualifiedName(), getLineNumber(type.getSourceRange()));
 		} catch (JavaModelException e) {
 			return null;
 		}
@@ -48,10 +59,14 @@ class JavaElementConverter {
 	}
 
 	protected int getLineNumber(IMember element) throws JavaModelException {
+		return getLineNumber(element.getSourceRange());
+	}
+
+	protected int getLineNumber(ISourceRange sourceRange) {
 		if (lineNumberProvider == null) {
 			return LineNumberProvider.BAD_LOCATION;
 		}
-		return lineNumberProvider.getLineNumber(element.getSourceRange().getOffset());
+		return lineNumberProvider.getLineNumber(sourceRange.getOffset());
 	}
 
 	protected String getFullyQualifiedClassName(IMember member) {

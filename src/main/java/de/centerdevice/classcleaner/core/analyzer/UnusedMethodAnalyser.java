@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IMarker;
 
+import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.CodeReference;
 import de.centerdevice.classcleaner.core.model.Issue;
@@ -18,9 +19,11 @@ public class UnusedMethodAnalyser implements ReferenceAnalyzer {
 	public List<Issue> analyze(ReferenceReport report) {
 		List<Issue> issues = new ArrayList<>();
 
-		for (CodeReference codeReferences : report.getReferences()) {
-			if (codeReferences.getSource() == null) {
-				issues.add(createIssue(codeReferences));
+		for (ClassInfo classInfo : report.getClasses()) {
+			for (CodeReference codeReferences : report.getReferences(classInfo)) {
+				if (codeReferences.getSource() == null) {
+					issues.add(createIssue(codeReferences));
+				}
 			}
 		}
 

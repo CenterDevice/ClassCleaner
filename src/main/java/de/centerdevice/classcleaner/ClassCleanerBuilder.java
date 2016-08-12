@@ -15,15 +15,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import de.centerdevice.classcleaner.core.analyzer.UnusedMethodAnalyser;
+import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.Issue;
 import de.centerdevice.classcleaner.core.recon.ReferenceReport;
 import de.centerdevice.classcleaner.core.recon.ReferenceReporter;
-import de.centerdevice.classcleaner.java.JavaReferenceFinderVisitor;
+import de.centerdevice.classcleaner.java.JavaReferenceFindingVisitor;
 import de.centerdevice.classcleaner.reporting.ClassMarker;
 
 public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 
-	private ReferenceReporter reporter = new ReferenceReporter(Arrays.asList(new JavaReferenceFinderVisitor()));
+	private ReferenceReporter reporter = new ReferenceReporter(Arrays.asList(new JavaReferenceFindingVisitor()));
 
 	private ClassMarker marker = new ClassMarker();
 
@@ -90,19 +91,18 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 	}
 
 	protected void analyze(IFile resource, IProgressMonitor monitor) {
-
 		marker.deleteMarkers(resource);
 
 		ReferenceReport report = reporter.createReport(resource, monitor);
-
-		UnusedMethodAnalyser analyzer = new UnusedMethodAnalyser();
-		List<Issue> issues = analyzer.analyze(report);
+		List<Issue> issues = new UnusedMethodAnalyser().analyze(report);
 
 		for (Issue issue : issues) {
 			marker.addMarker(resource, issue);
 		}
 
-		System.out.println(report.getClustering().getReferenceGroups());
+		for (ClassInfo classInfo : report.getClasses()) {
+			System.out.println(report.getClustering(classInfo).getReferenceGroups());
+		}
 	}
 
 	protected void fullBuild(final IProgressMonitor monitor) throws CoreException {

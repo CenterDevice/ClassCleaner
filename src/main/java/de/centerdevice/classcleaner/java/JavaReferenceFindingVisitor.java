@@ -1,7 +1,8 @@
 package de.centerdevice.classcleaner.java;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -13,14 +14,15 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.Document;
 
 import de.centerdevice.classcleaner.common.LineNumberProvider;
+import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeReference;
-import de.centerdevice.classcleaner.core.recon.ReferenceFinderVisitor;
+import de.centerdevice.classcleaner.core.recon.ReferenceFindingVisitor;
 import de.centerdevice.classcleaner.java.search.JavaReferenceSearch;
 
-public class JavaReferenceFinderVisitor implements ReferenceFinderVisitor {
+public class JavaReferenceFindingVisitor implements ReferenceFindingVisitor {
 
 	@Override
-	public List<CodeReference> visit(IFile resource, IProgressMonitor monitor) {
+	public Map<ClassInfo, List<CodeReference>> visit(IFile resource, IProgressMonitor monitor) {
 		if (resource.getName().endsWith(".java")) {
 			IJavaElement javaElement = JavaCore.create(resource);
 			if (javaElement instanceof ICompilationUnit) {
@@ -28,10 +30,11 @@ public class JavaReferenceFinderVisitor implements ReferenceFinderVisitor {
 			}
 		}
 
-		return new ArrayList<>();
+		return new HashMap<>(0);
 	}
 
-	protected List<CodeReference> collectReferences(ICompilationUnit compilationUnit, JavaReferenceSearch search) {
+	protected Map<ClassInfo, List<CodeReference>> collectReferences(ICompilationUnit compilationUnit,
+			JavaReferenceSearch search) {
 		return collectReferences(compilationUnit, search,
 				new JavaElementConverter(getLineNumberProvider(compilationUnit)));
 	}
@@ -44,14 +47,14 @@ public class JavaReferenceFinderVisitor implements ReferenceFinderVisitor {
 		}
 	}
 
-	protected List<CodeReference> collectReferences(ICompilationUnit javaElement, JavaReferenceSearch searchEngine,
-			JavaElementConverter elementConverter) {
+	protected Map<ClassInfo, List<CodeReference>> collectReferences(ICompilationUnit javaElement,
+			JavaReferenceSearch searchEngine, JavaElementConverter elementConverter) {
 		JavaReferenceCollector javaReferenceCollector = new JavaReferenceCollector(searchEngine, elementConverter);
 		try {
-			javaReferenceCollector.collect(javaElement);
+			return javaReferenceCollector.collect(javaElement);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
-		return javaReferenceCollector.getReferences();
+		return new HashMap<>(0);
 	}
 }
