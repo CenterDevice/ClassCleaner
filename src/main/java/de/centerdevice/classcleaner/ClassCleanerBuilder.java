@@ -1,9 +1,6 @@
 package de.centerdevice.classcleaner;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -15,21 +12,7 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import de.centerdevice.classcleaner.core.analyzer.ForeignMethodAnalyzer;
-import de.centerdevice.classcleaner.core.analyzer.MethodClusterAnalyzer;
-import de.centerdevice.classcleaner.core.analyzer.ReferenceCycleAnalyzer;
-import de.centerdevice.classcleaner.core.analyzer.UnusedMethodAnalyzer;
-import de.centerdevice.classcleaner.core.model.Issue;
-import de.centerdevice.classcleaner.core.recon.ReferenceReport;
-import de.centerdevice.classcleaner.core.recon.ReferenceReporter;
-import de.centerdevice.classcleaner.java.JavaReferenceFindingVisitor;
-import de.centerdevice.classcleaner.reporting.ClassMarker;
-
 public class ClassCleanerBuilder extends IncrementalProjectBuilder {
-
-	private final ReferenceReporter reporter = new ReferenceReporter(Arrays.asList(new JavaReferenceFindingVisitor()));
-
-	private final ClassMarker marker = new ClassMarker();
 
 	class SampleDeltaVisitor implements IResourceDeltaVisitor {
 		private final IProgressMonitor monitor;
@@ -86,26 +69,13 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 
 	@Override
 	protected void clean(IProgressMonitor monitor) throws CoreException {
-		marker.clean(getProject());
+		ClassCleaner.getInstance().removeAllMarkers(getProject());
 	}
 
 	void checkResource(IResource resource, IProgressMonitor monitor) {
 		if (resource instanceof IFile) {
-			analyze((IFile) resource, monitor);
+			ClassCleaner.getInstance().analyze((IFile) resource, monitor);
 		}
-	}
-
-	protected void analyze(IFile resource, IProgressMonitor monitor) {
-		marker.deleteMarkers(resource);
-
-		ReferenceReport report = reporter.createReport(resource, monitor);
-		Set<Issue> issues = new HashSet<>();
-		issues.addAll(new UnusedMethodAnalyzer().analyze(report));
-		issues.addAll(new MethodClusterAnalyzer().analyze(report));
-		issues.addAll(new ReferenceCycleAnalyzer().analyze(report));
-		issues.addAll(new ForeignMethodAnalyzer().analyze(report));
-
-		marker.addMarker(resource, issues);
 	}
 
 	protected void fullBuild(final IProgressMonitor monitor) throws CoreException {
