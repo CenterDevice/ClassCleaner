@@ -10,6 +10,7 @@ import de.centerdevice.classcleaner.core.engine.ReferenceGraph;
 import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.Issue;
+import de.centerdevice.classcleaner.core.model.ReferenceScope;
 import de.centerdevice.classcleaner.core.recon.ReferenceReport;
 
 public class ForeignMethodAnalyzer implements ReferenceAnalyzer {
@@ -19,6 +20,9 @@ public class ForeignMethodAnalyzer implements ReferenceAnalyzer {
 	@Override
 	public Set<Issue> analyze(ReferenceReport report) {
 		Set<Issue> issues = new HashSet<>();
+		if (report.getScope() != ReferenceScope.Project) {
+			return issues;
+		}
 
 		for (ClassInfo classInfo : report.getClasses()) {
 			ReferenceGraph graph = report.getReferenceGraph(classInfo);

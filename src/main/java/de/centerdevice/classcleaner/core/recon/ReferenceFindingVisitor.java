@@ -8,9 +8,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeReference;
+import de.centerdevice.classcleaner.core.model.ReferenceScope;
 
 public interface ReferenceFindingVisitor {
 
-	Map<ClassInfo, List<CodeReference>> visit(IFile resource, IProgressMonitor monitor);
+	Map<ClassInfo, List<CodeReference>> visit(IFile resource, ReferenceScope scope, IProgressMonitor monitor);
 
 }

@@ -9,6 +9,7 @@ import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.CodeReference;
 import de.centerdevice.classcleaner.core.model.Issue;
+import de.centerdevice.classcleaner.core.model.ReferenceScope;
 import de.centerdevice.classcleaner.core.recon.ReferenceReport;
 
 public class UnusedMethodAnalyzer implements ReferenceAnalyzer {
@@ -18,6 +19,9 @@ public class UnusedMethodAnalyzer implements ReferenceAnalyzer {
 	@Override
 	public Set<Issue> analyze(ReferenceReport report) {
 		Set<Issue> issues = new HashSet<>();
+		if (report.getScope() != ReferenceScope.Project) {
+			return issues;
+		}
 
 		for (ClassInfo classInfo : report.getClasses()) {
 			for (CodeReference codeReferences : report.getReferences(classInfo)) {

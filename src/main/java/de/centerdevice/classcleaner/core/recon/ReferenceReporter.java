@@ -19,18 +19,19 @@ public class ReferenceReporter {
 		this.visitors = visitors;
 	}
 
-	public ReferenceReport createReport(IFile resource, IProgressMonitor monitor) {
-		return new ReferenceReport(ReferenceScope.Project, getAllReferences(resource, monitor));
+	public ReferenceReport createReport(IFile resource, ReferenceScope scope, IProgressMonitor monitor) {
+		return new ReferenceReport(scope, getAllReferences(resource, scope, monitor));
 	}
 
-	public ReferenceReport createReport(IFile resource) {
-		return createReport(resource, null);
+	public ReferenceReport createReport(IFile resource, ReferenceScope scope) {
+		return createReport(resource, scope, null);
 	}
 
-	protected Map<ClassInfo, List<CodeReference>> getAllReferences(IFile resource, IProgressMonitor monitor) {
+	protected Map<ClassInfo, List<CodeReference>> getAllReferences(IFile resource, ReferenceScope scope,
+			IProgressMonitor monitor) {
 		Map<ClassInfo, List<CodeReference>> references = new HashMap<>();
 		for (ReferenceFindingVisitor visitor : visitors) {
-			merge(references, visitor.visit(resource, monitor));
+			merge(references, visitor.visit(resource, scope, monitor));
 		}
 		return references;
 	}

@@ -11,26 +11,42 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.search.IJavaSearchScope;
+import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jface.text.Document;
 
 import de.centerdevice.classcleaner.common.LineNumberProvider;
 import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeReference;
+import de.centerdevice.classcleaner.core.model.ReferenceScope;
 import de.centerdevice.classcleaner.core.recon.ReferenceFindingVisitor;
 import de.centerdevice.classcleaner.java.search.JavaReferenceSearch;
 
 public class JavaReferenceFindingVisitor implements ReferenceFindingVisitor {
 
 	@Override
-	public Map<ClassInfo, List<CodeReference>> visit(IFile resource, IProgressMonitor monitor) {
+	public Map<ClassInfo, List<CodeReference>> visit(IFile resource, ReferenceScope scope, IProgressMonitor monitor) {
 		if (resource.getName().endsWith(".java")) {
 			IJavaElement javaElement = JavaCore.create(resource);
 			if (javaElement instanceof ICompilationUnit) {
-				return collectReferences((ICompilationUnit) javaElement, new JavaReferenceSearch(monitor));
+				return getReferencesInScope(scope, (ICompilationUnit) javaElement, monitor);
 			}
 		}
 
 		return new HashMap<>(0);
+	}
+
+	protected Map<ClassInfo, List<CodeReference>> getReferencesInScope(ReferenceScope scope,
+			ICompilationUnit javaElement, IProgressMonitor monitor) {
+		return collectReferences(javaElement, new JavaReferenceSearch(monitor, getSearchScope(scope, javaElement)));
+	}
+
+	protected IJavaSearchScope getSearchScope(ReferenceScope scope, ICompilationUnit compilationUnit) {
+		if (scope == ReferenceScope.Class) {
+			return SearchEngine.createJavaSearchScope(new IJavaElement[] { compilationUnit });
+		}
+
+		return SearchEngine.createWorkspaceScope();
 	}
 
 	protected Map<ClassInfo, List<CodeReference>> collectReferences(ICompilationUnit compilationUnit,

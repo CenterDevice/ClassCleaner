@@ -12,19 +12,20 @@ import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 
 public class JavaReferenceSearch {
+	private static final SearchParticipant[] SEARCH_PARTICIPANTS = new SearchParticipant[] {
+			SearchEngine.getDefaultSearchParticipant() };
+
 	private final SearchEngine searchEngine;
-	private IProgressMonitor monitor;
+	private final IProgressMonitor monitor;
+	private final IJavaSearchScope scope;
 
-	public JavaReferenceSearch() {
-		this(new SearchEngine(), null);
+	public JavaReferenceSearch(IProgressMonitor monitor, IJavaSearchScope scope) {
+		this(new SearchEngine(), scope, monitor);
 	}
 
-	public JavaReferenceSearch(IProgressMonitor monitor) {
-		this(new SearchEngine(), monitor);
-	}
-
-	public JavaReferenceSearch(SearchEngine searchEngine, IProgressMonitor monitor) {
+	public JavaReferenceSearch(SearchEngine searchEngine, IJavaSearchScope scope, IProgressMonitor monitor) {
 		this.searchEngine = searchEngine;
+		this.scope = scope;
 		this.monitor = monitor;
 	}
 
@@ -32,9 +33,7 @@ public class JavaReferenceSearch {
 		SearchReferenceCollector methodReferenceCollector = new SearchReferenceCollector();
 
 		try {
-			searchEngine.search(getPattern(element),
-					new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, getSearchScope(),
-					methodReferenceCollector, monitor);
+			searchEngine.search(getPattern(element), SEARCH_PARTICIPANTS, scope, methodReferenceCollector, monitor);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
@@ -44,9 +43,5 @@ public class JavaReferenceSearch {
 
 	protected SearchPattern getPattern(IJavaElement element) {
 		return SearchPattern.createPattern(element, IJavaSearchConstants.REFERENCES);
-	}
-
-	protected IJavaSearchScope getSearchScope() {
-		return SearchEngine.createWorkspaceScope();
 	}
 }

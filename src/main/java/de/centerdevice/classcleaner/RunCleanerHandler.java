@@ -34,7 +34,7 @@ public class RunCleanerHandler extends AbstractHandler implements IHandler {
 		Job job = new Job("ClassCleaner") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				ClassCleaner.getInstance().analyze(file, monitor);
+				ClassCleaner.getInstance().analyzeFull(file, monitor);
 				return Status.OK_STATUS;
 			}
 		};

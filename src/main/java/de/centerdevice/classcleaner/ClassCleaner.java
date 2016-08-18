@@ -14,6 +14,7 @@ import de.centerdevice.classcleaner.core.analyzer.MethodClusterAnalyzer;
 import de.centerdevice.classcleaner.core.analyzer.ReferenceCycleAnalyzer;
 import de.centerdevice.classcleaner.core.analyzer.UnusedMethodAnalyzer;
 import de.centerdevice.classcleaner.core.model.Issue;
+import de.centerdevice.classcleaner.core.model.ReferenceScope;
 import de.centerdevice.classcleaner.core.recon.ReferenceReport;
 import de.centerdevice.classcleaner.core.recon.ReferenceReporter;
 import de.centerdevice.classcleaner.java.JavaReferenceFindingVisitor;
@@ -35,10 +36,18 @@ public class ClassCleaner {
 		return instance;
 	}
 
-	public void analyze(IFile resource, IProgressMonitor monitor) {
+	public void analyzeFull(IFile resource, IProgressMonitor monitor) {
+		analyze(resource, ReferenceScope.Project, monitor);
+	}
+
+	public void analyzeQuick(IFile resource, IProgressMonitor monitor) {
+		analyze(resource, ReferenceScope.Class, monitor);
+	}
+
+	private void analyze(IFile resource, ReferenceScope scope, IProgressMonitor monitor) {
 		marker.deleteMarkers(resource);
 
-		ReferenceReport report = reporter.createReport(resource, monitor);
+		ReferenceReport report = reporter.createReport(resource, scope, monitor);
 		Set<Issue> issues = new HashSet<>();
 		issues.addAll(new UnusedMethodAnalyzer().analyze(report));
 		issues.addAll(new MethodClusterAnalyzer().analyze(report));

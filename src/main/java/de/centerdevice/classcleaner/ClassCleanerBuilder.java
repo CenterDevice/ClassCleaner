@@ -67,7 +67,7 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 
 	void checkResource(IResource resource, IProgressMonitor monitor) {
 		if (resource instanceof IFile) {
-			ClassCleaner.getInstance().analyze((IFile) resource, monitor);
+			ClassCleaner.getInstance().analyzeQuick((IFile) resource, monitor);
 		}
 	}
 
