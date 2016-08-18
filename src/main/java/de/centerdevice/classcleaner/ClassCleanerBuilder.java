@@ -23,14 +23,7 @@ public class ClassCleanerBuilder extends IncrementalProjectBuilder {
 
 		@Override
 		public boolean visit(IResourceDelta delta) throws CoreException {
-			IResource resource = delta.getResource();
-			switch (delta.getKind()) {
-			case IResourceDelta.ADDED:
-			case IResourceDelta.REMOVED:
-			case IResourceDelta.CHANGED:
-				checkResource(resource, monitor);
-				break;
-			}
+			checkResource(delta.getResource(), monitor);
 			return true;
 		}
 	}
