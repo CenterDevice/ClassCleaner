@@ -104,5 +104,34 @@
             value="true">
       </persistent>
    </extension>
-
+   <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="de.centerdevice.classcleaner.RunCleanerHandler"
+           commandId="de.centerdevice.classcleaner.RunCleanerCommand">
+     </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+         <command name="Run ClassCleaner"
+               id="de.centerdevice.classcleaner.RunCleanerCommand">
+         </command>
+   </extension>
+   <extension point="org.eclipse.ui.menus">
+     <menuContribution locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
+         <command
+             commandId="de.centerdevice.classcleaner.RunCleanerCommand"
+             style="push">
+             <visibleWhen
+                  checkEnabled="false">
+              <iterate>
+		        <adapt type="org.eclipse.core.resources.IResource">
+		          <test property="org.eclipse.core.resources.name" 
+		                value="*.java"/>
+		        </adapt>
+		      </iterate>
+           </visibleWhen>
+         </command>
+     </menuContribution>
+   </extension>
 </plugin>
