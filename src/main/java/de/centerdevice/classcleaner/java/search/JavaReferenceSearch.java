@@ -16,8 +16,8 @@ public class JavaReferenceSearch {
 			SearchEngine.getDefaultSearchParticipant() };
 
 	private final SearchEngine searchEngine;
-	private final IProgressMonitor monitor;
 	private final IJavaSearchScope scope;
+	private final IProgressMonitor monitor;
 
 	public JavaReferenceSearch(IProgressMonitor monitor, IJavaSearchScope scope) {
 		this(new SearchEngine(), scope, monitor);

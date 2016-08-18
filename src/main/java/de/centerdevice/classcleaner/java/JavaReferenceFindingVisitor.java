@@ -10,17 +10,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.search.IJavaSearchScope;
-import org.eclipse.jdt.core.search.SearchEngine;
-import org.eclipse.jface.text.Document;
 
-import de.centerdevice.classcleaner.common.LineNumberProvider;
 import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeReference;
 import de.centerdevice.classcleaner.core.model.ReferenceScope;
 import de.centerdevice.classcleaner.core.recon.ReferenceFindingVisitor;
-import de.centerdevice.classcleaner.java.search.JavaReferenceSearch;
 
 public class JavaReferenceFindingVisitor implements ReferenceFindingVisitor {
 
@@ -38,29 +32,7 @@ public class JavaReferenceFindingVisitor implements ReferenceFindingVisitor {
 
 	protected Map<ClassInfo, List<CodeReference>> findReferencesInScope(ReferenceScope scope,
 			ICompilationUnit javaElement, IProgressMonitor monitor) {
-		return findReferences(javaElement, new JavaReferenceSearch(monitor, getSearchScope(scope, javaElement)));
-	}
-
-	protected IJavaSearchScope getSearchScope(ReferenceScope scope, ICompilationUnit compilationUnit) {
-		if (scope == ReferenceScope.Class) {
-			return SearchEngine.createJavaSearchScope(new IJavaElement[] { compilationUnit });
-		}
-
-		return SearchEngine.createWorkspaceScope();
-	}
-
-	protected LineNumberProvider getLineNumberProvider(ICompilationUnit compilationUnit) {
-		try {
-			return new LineNumberProvider(new Document(compilationUnit.getSource()));
-		} catch (JavaModelException e) {
-			return null;
-		}
-	}
-
-	protected Map<ClassInfo, List<CodeReference>> findReferences(ICompilationUnit javaElement,
-			JavaReferenceSearch searchEngine) {
-		JavaReferenceFinder javaReferenceFinder = new JavaReferenceFinder(searchEngine,
-				new JavaElementConverter(getLineNumberProvider(javaElement)));
+		JavaReferenceFinder javaReferenceFinder = new JavaReferenceFinder(javaElement, scope, monitor);
 		try {
 			return javaReferenceFinder.findReferences(javaElement);
 		} catch (CoreException e) {

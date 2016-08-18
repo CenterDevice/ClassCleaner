@@ -6,15 +6,22 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.search.IJavaSearchScope;
+import org.eclipse.jdt.core.search.SearchEngine;
+import org.eclipse.jface.text.Document;
 
+import de.centerdevice.classcleaner.common.LineNumberProvider;
 import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.CodeReference;
+import de.centerdevice.classcleaner.core.model.ReferenceScope;
 import de.centerdevice.classcleaner.java.search.JavaReferenceSearch;
 
 class JavaReferenceFinder {
@@ -22,9 +29,9 @@ class JavaReferenceFinder {
 	private final JavaReferenceSearch searchEngine;
 	private final JavaElementConverter converter;
 
-	public JavaReferenceFinder(JavaReferenceSearch searchEngine, JavaElementConverter converter) {
-		this.searchEngine = searchEngine;
-		this.converter = converter;
+	public JavaReferenceFinder(ICompilationUnit element, ReferenceScope scope, IProgressMonitor monitor) {
+		this.searchEngine = new JavaReferenceSearch(monitor, getSearchScope(scope, element));
+		this.converter = new JavaElementConverter(getLineNumberProvider(element));
 	}
 
 	public Map<ClassInfo, List<CodeReference>> findReferences(ICompilationUnit compilationUnit) throws CoreException {
@@ -64,5 +71,21 @@ class JavaReferenceFinder {
 		}
 
 		return references;
+	}
+
+	protected IJavaSearchScope getSearchScope(ReferenceScope scope, ICompilationUnit compilationUnit) {
+		if (scope == ReferenceScope.Class) {
+			return SearchEngine.createJavaSearchScope(new IJavaElement[] { compilationUnit });
+		}
+
+		return SearchEngine.createWorkspaceScope();
+	}
+
+	protected LineNumberProvider getLineNumberProvider(ICompilationUnit compilationUnit) {
+		try {
+			return new LineNumberProvider(new Document(compilationUnit.getSource()));
+		} catch (JavaModelException e) {
+			return null;
+		}
 	}
 }
