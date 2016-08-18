@@ -17,12 +17,12 @@ import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.CodeReference;
 import de.centerdevice.classcleaner.java.search.JavaReferenceSearch;
 
-class JavaReferenceCollector {
+class JavaReferenceFinder {
 
 	private final JavaReferenceSearch searchEngine;
 	private final JavaElementConverter converter;
 
-	public JavaReferenceCollector(JavaReferenceSearch searchEngine, JavaElementConverter converter) {
+	public JavaReferenceFinder(JavaReferenceSearch searchEngine, JavaElementConverter converter) {
 		this.searchEngine = searchEngine;
 		this.converter = converter;
 	}

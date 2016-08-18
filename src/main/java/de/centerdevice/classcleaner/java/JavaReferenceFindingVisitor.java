@@ -49,12 +49,6 @@ public class JavaReferenceFindingVisitor implements ReferenceFindingVisitor {
 		return SearchEngine.createWorkspaceScope();
 	}
 
-	protected Map<ClassInfo, List<CodeReference>> findReferences(ICompilationUnit compilationUnit,
-			JavaReferenceSearch search) {
-		return findReferences(compilationUnit, search,
-				new JavaElementConverter(getLineNumberProvider(compilationUnit)));
-	}
-
 	protected LineNumberProvider getLineNumberProvider(ICompilationUnit compilationUnit) {
 		try {
 			return new LineNumberProvider(new Document(compilationUnit.getSource()));
@@ -64,10 +58,11 @@ public class JavaReferenceFindingVisitor implements ReferenceFindingVisitor {
 	}
 
 	protected Map<ClassInfo, List<CodeReference>> findReferences(ICompilationUnit javaElement,
-			JavaReferenceSearch searchEngine, JavaElementConverter elementConverter) {
-		JavaReferenceCollector javaReferenceCollector = new JavaReferenceCollector(searchEngine, elementConverter);
+			JavaReferenceSearch searchEngine) {
+		JavaReferenceFinder javaReferenceFinder = new JavaReferenceFinder(searchEngine,
+				new JavaElementConverter(getLineNumberProvider(javaElement)));
 		try {
-			return javaReferenceCollector.findReferences(javaElement);
+			return javaReferenceFinder.findReferences(javaElement);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
