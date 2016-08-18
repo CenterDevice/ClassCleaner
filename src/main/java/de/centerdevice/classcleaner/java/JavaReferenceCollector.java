@@ -27,30 +27,30 @@ class JavaReferenceCollector {
 		this.converter = converter;
 	}
 
-	public Map<ClassInfo, List<CodeReference>> collect(ICompilationUnit compilationUnit) throws CoreException {
+	public Map<ClassInfo, List<CodeReference>> findReferences(ICompilationUnit compilationUnit) throws CoreException {
 		Map<ClassInfo, List<CodeReference>> references = new HashMap<>();
 		for (IType type : compilationUnit.getTypes()) {
-			references.put(converter.convert(type), getReferences(type));
+			references.put(converter.convert(type), findReferences(type));
 		}
 		return references;
 	}
 
-	protected List<CodeReference> getReferences(IType type) throws CoreException {
+	protected List<CodeReference> findReferences(IType type) throws CoreException {
 		List<CodeReference> references = new ArrayList<>();
 
 		for (IMethod method : type.getMethods()) {
 			if (!method.isMainMethod()) {
-				references.addAll(getReferences(method));
+				references.addAll(findReferences(method));
 			}
 		}
 		for (IField field : type.getFields()) {
-			references.addAll(getReferences(field));
+			references.addAll(findReferences(field));
 		}
 
 		return references;
 	}
 
-	protected List<CodeReference> getReferences(IJavaElement element) {
+	protected List<CodeReference> findReferences(IJavaElement element) {
 		CodeElement targetElement = converter.convert(element);
 		List<IJavaElement> referenceElements = searchEngine.findReferences(element);
 		List<CodeReference> references = new ArrayList<>();

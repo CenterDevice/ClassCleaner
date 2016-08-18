@@ -29,16 +29,16 @@ public class JavaReferenceFindingVisitor implements ReferenceFindingVisitor {
 		if (resource.getName().endsWith(".java")) {
 			IJavaElement javaElement = JavaCore.create(resource);
 			if (javaElement instanceof ICompilationUnit) {
-				return getReferencesInScope(scope, (ICompilationUnit) javaElement, monitor);
+				return findReferencesInScope(scope, (ICompilationUnit) javaElement, monitor);
 			}
 		}
 
 		return new HashMap<>(0);
 	}
 
-	protected Map<ClassInfo, List<CodeReference>> getReferencesInScope(ReferenceScope scope,
+	protected Map<ClassInfo, List<CodeReference>> findReferencesInScope(ReferenceScope scope,
 			ICompilationUnit javaElement, IProgressMonitor monitor) {
-		return collectReferences(javaElement, new JavaReferenceSearch(monitor, getSearchScope(scope, javaElement)));
+		return findReferences(javaElement, new JavaReferenceSearch(monitor, getSearchScope(scope, javaElement)));
 	}
 
 	protected IJavaSearchScope getSearchScope(ReferenceScope scope, ICompilationUnit compilationUnit) {
@@ -49,9 +49,9 @@ public class JavaReferenceFindingVisitor implements ReferenceFindingVisitor {
 		return SearchEngine.createWorkspaceScope();
 	}
 
-	protected Map<ClassInfo, List<CodeReference>> collectReferences(ICompilationUnit compilationUnit,
+	protected Map<ClassInfo, List<CodeReference>> findReferences(ICompilationUnit compilationUnit,
 			JavaReferenceSearch search) {
-		return collectReferences(compilationUnit, search,
+		return findReferences(compilationUnit, search,
 				new JavaElementConverter(getLineNumberProvider(compilationUnit)));
 	}
 
@@ -63,11 +63,11 @@ public class JavaReferenceFindingVisitor implements ReferenceFindingVisitor {
 		}
 	}
 
-	protected Map<ClassInfo, List<CodeReference>> collectReferences(ICompilationUnit javaElement,
+	protected Map<ClassInfo, List<CodeReference>> findReferences(ICompilationUnit javaElement,
 			JavaReferenceSearch searchEngine, JavaElementConverter elementConverter) {
 		JavaReferenceCollector javaReferenceCollector = new JavaReferenceCollector(searchEngine, elementConverter);
 		try {
-			return javaReferenceCollector.collect(javaElement);
+			return javaReferenceCollector.findReferences(javaElement);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
