@@ -112,26 +112,54 @@
      </handler>
    </extension>
    <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="de.centerdevice.classcleaner.CreateDotFileHandler"
+           commandId="de.centerdevice.classcleaner.CreateDotFileCommand">
+     </handler>
+   </extension>
+   <extension
          point="org.eclipse.ui.commands">
-         <command name="Run ClassCleaner"
+         <command name="Run full analysis"
                id="de.centerdevice.classcleaner.RunCleanerCommand">
+         </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+         <command name="Create Dot-File"
+               id="de.centerdevice.classcleaner.CreateDotFileCommand">
          </command>
    </extension>
    <extension point="org.eclipse.ui.menus">
      <menuContribution locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
-         <command
-             commandId="de.centerdevice.classcleaner.RunCleanerCommand"
-             style="push">
-             <visibleWhen
-                  checkEnabled="false">
-              <iterate>
-		        <adapt type="org.eclipse.core.resources.IResource">
-		          <test property="org.eclipse.core.resources.name" 
-		                value="*.java"/>
-		        </adapt>
-		      </iterate>
-           </visibleWhen>
-         </command>
+     	<menu id="de.centerdevice.classcleaner.sampleMenu" label="ClassCleaner">
+	        <command
+	            commandId="de.centerdevice.classcleaner.RunCleanerCommand"
+	            style="push">
+	            <visibleWhen
+	                 checkEnabled="false">
+	             	<iterate>
+			        	<adapt type="org.eclipse.core.resources.IResource">
+			         	<test property="org.eclipse.core.resources.name" 
+			               value="*.java"/>
+			       </adapt>
+			    	</iterate>
+	        	</visibleWhen>
+	        </command>
+	        <command
+	            commandId="de.centerdevice.classcleaner.CreateDotFileCommand"
+	            style="push">
+	            <visibleWhen
+	                 checkEnabled="false">
+	             <iterate>
+			       <adapt type="org.eclipse.core.resources.IResource">
+			         <test property="org.eclipse.core.resources.name" 
+			               value="*.java"/>
+			       </adapt>
+			     </iterate>
+	          </visibleWhen>
+	        </command>
+     	</menu>
      </menuContribution>
    </extension>
 </plugin>

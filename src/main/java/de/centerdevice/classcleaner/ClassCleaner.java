@@ -47,7 +47,7 @@ public class ClassCleaner {
 	private void analyze(IFile resource, ReferenceScope scope, IProgressMonitor monitor) {
 		marker.deleteMarkers(resource);
 
-		ReferenceReport report = reporter.createReport(resource, scope, monitor);
+		ReferenceReport report = generateReport(resource, scope, monitor);
 		Set<Issue> issues = new HashSet<>();
 		issues.addAll(new UnusedMethodAnalyzer().analyze(report));
 		issues.addAll(new MethodClusterAnalyzer().analyze(report));
@@ -55,6 +55,10 @@ public class ClassCleaner {
 		issues.addAll(new ForeignMethodAnalyzer().analyze(report));
 
 		marker.addMarker(resource, issues);
+	}
+
+	public ReferenceReport generateReport(IFile resource, ReferenceScope scope, IProgressMonitor monitor) {
+		return reporter.createReport(resource, scope, monitor);
 	}
 
 	public void removeAllMarkers(IProject project) throws CoreException {
