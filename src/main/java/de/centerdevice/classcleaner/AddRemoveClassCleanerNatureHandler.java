@@ -15,6 +15,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 public class AddRemoveClassCleanerNatureHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// TODO Auto-generated method stub
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
@@ -26,7 +27,7 @@ public class AddRemoveClassCleanerNatureHandler extends AbstractHandler {
 				if (element instanceof IProject) {
 					project = (IProject) element;
 				} else if (element instanceof IAdaptable) {
-					project = (IProject) ((IAdaptable) element).getAdapter(IProject.class);
+					project = ((IAdaptable) element).getAdapter(IProject.class);
 				}
 				if (project != null) {
 					try {
