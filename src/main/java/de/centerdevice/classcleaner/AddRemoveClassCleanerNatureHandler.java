@@ -60,6 +60,7 @@ public class AddRemoveClassCleanerNatureHandler extends AbstractHandler {
 				System.arraycopy(natures, i + 1, newNatures, i, natures.length - i - 1);
 				description.setNatureIds(newNatures);
 				project.setDescription(description, null);
+				ClassCleaner.getInstance().removeAllMarkers(project);
 				return;
 			}
 		}
