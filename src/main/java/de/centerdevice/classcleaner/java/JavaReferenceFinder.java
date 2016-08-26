@@ -37,9 +37,17 @@ class JavaReferenceFinder {
 	public Map<ClassInfo, List<CodeReference>> findReferences(ICompilationUnit compilationUnit) throws CoreException {
 		Map<ClassInfo, List<CodeReference>> references = new HashMap<>();
 		for (IType type : compilationUnit.getTypes()) {
-			references.put(converter.convert(type), findReferences(type));
+			findReferences(type, references);
 		}
 		return references;
+	}
+
+	protected void findReferences(IType type, Map<ClassInfo, List<CodeReference>> references) throws CoreException {
+		references.put(converter.convert(type), findReferences(type));
+
+		for (IType subType : type.getTypes()) {
+			findReferences(subType, references);
+		}
 	}
 
 	protected List<CodeReference> findReferences(IType type) throws CoreException {
