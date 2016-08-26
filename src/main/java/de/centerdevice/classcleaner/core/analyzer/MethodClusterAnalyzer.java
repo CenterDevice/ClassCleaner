@@ -30,7 +30,7 @@ public class MethodClusterAnalyzer implements ReferenceAnalyzer {
 
 	protected List<Issue> analyzeIssuesForClass(ReferenceReport report, ClassInfo classInfo) {
 		ReferenceGraph clustering = report.getReferenceGraph(classInfo);
-		List<Set<CodeElement>> referenceGroups = clustering.getReferenceGroups();
+		List<Set<CodeElement>> referenceGroups = clustering.getReferenceGroups(classInfo);
 		List<Issue> issues = new ArrayList<>();
 		if (referenceGroups.size() > 1) {
 			for (Set<CodeElement> set : referenceGroups) {

@@ -4,18 +4,20 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedSubgraph;
 
+import de.centerdevice.classcleaner.core.model.ClassInfo;
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.CodeReference;
 
 public class ReferenceGraph {
-	DirectedGraph<CodeElement, DefaultEdge> directedGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
+	DirectedGraph<CodeElement, CodeElemetEdge> directedGraph = new DefaultDirectedGraph<>(CodeElemetEdge.class);
 
 	public ReferenceGraph(Collection<CodeReference> reference) {
 		addReferences(reference);
@@ -40,7 +42,7 @@ public class ReferenceGraph {
 	}
 
 	public Set<CodeElement> getCycles() {
-		CycleDetector<CodeElement, DefaultEdge> cycleDetector = new CycleDetector<>(directedGraph);
+		CycleDetector<CodeElement, CodeElemetEdge> cycleDetector = new CycleDetector<>(directedGraph);
 
 		return cycleDetector.findCycles();
 	}
@@ -60,8 +62,25 @@ public class ReferenceGraph {
 	}
 
 	public List<Set<CodeElement>> getReferenceGroups() {
-		ConnectivityInspector<CodeElement, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(
-				directedGraph);
-		return connectivityInspector.connectedSets();
+		return getReferenceGroups(directedGraph);
+	}
+
+	public List<Set<CodeElement>> getReferenceGroups(ClassInfo classInfo) {
+		return getReferenceGroups(getSubgraphOfClass(classInfo));
+	}
+
+	private List<Set<CodeElement>> getReferenceGroups(DirectedGraph<CodeElement, CodeElemetEdge> directedGraph) {
+		return new ConnectivityInspector<>(directedGraph).connectedSets();
+	}
+
+	private DirectedSubgraph<CodeElement, CodeElemetEdge> getSubgraphOfClass(ClassInfo classInfo) {
+		Set<CodeElemetEdge> edgeSubset = directedGraph.edgeSet().stream().filter(edge -> edge.isWithinClass(classInfo))
+				.collect(Collectors.toSet());
+
+		Set<CodeElement> vertexSubset = edgeSubset.stream()
+				.flatMap(edge -> Stream.of(edge.getSourceElement(), edge.getTargetElement()))
+				.collect(Collectors.toSet());
+
+		return new DirectedSubgraph<>(directedGraph, vertexSubset, edgeSubset);
 	}
 }
