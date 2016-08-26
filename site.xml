@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <category-def name="classcleaner" label="CenterDevice ClassCleaner">
-      <description>
-         A plugin to split up java classes and reorganize class methods
-      </description>
-   </category-def>
-</site>
