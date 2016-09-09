@@ -11,7 +11,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import de.centerdevice.classcleaner.core.analyzer.ForeignMethodAnalyzer;
 import de.centerdevice.classcleaner.core.analyzer.MethodClusterAnalyzer;
-import de.centerdevice.classcleaner.core.analyzer.ReferenceCycleAnalyzer;
 import de.centerdevice.classcleaner.core.analyzer.UnusedMethodAnalyzer;
 import de.centerdevice.classcleaner.core.model.Issue;
 import de.centerdevice.classcleaner.core.model.ReferenceScope;
@@ -51,7 +50,6 @@ public class ClassCleaner {
 		Set<Issue> issues = new HashSet<>();
 		issues.addAll(new UnusedMethodAnalyzer().analyze(report));
 		issues.addAll(new MethodClusterAnalyzer().analyze(report));
-		issues.addAll(new ReferenceCycleAnalyzer().analyze(report));
 		issues.addAll(new ForeignMethodAnalyzer().analyze(report));
 
 		marker.addMarker(resource, issues);
