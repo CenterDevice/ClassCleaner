@@ -11,6 +11,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import de.centerdevice.classcleaner.java.JavaSelectionConverter;
@@ -26,7 +28,13 @@ public class RunCleanerHandler extends AbstractHandler implements IHandler {
 			for (IFile file : selectionConverter.toFiles((IStructuredSelection) selection)) {
 				analyzeFile(file);
 			}
+		} else {
+			IWorkbenchPart workbenchPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.getActivePart();
+			IFile file = workbenchPart.getSite().getPage().getActiveEditor().getEditorInput().getAdapter(IFile.class);
+			analyzeFile(file);
 		}
+
 		return null;
 	}
 

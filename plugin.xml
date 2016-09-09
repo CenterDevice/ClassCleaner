@@ -130,6 +130,12 @@
                id="de.centerdevice.classcleaner.CreateDotFileCommand">
          </command>
    </extension>
+   <extension point="org.eclipse.ui.bindings">
+		<key sequence="M1+CTRL+C"
+			commandId="de.centerdevice.classcleaner.RunCleanerCommand"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			contextId="org.eclipse.ui.contexts.window"/>
+	</extension>
    <extension point="org.eclipse.ui.menus">
      <menuContribution locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
      	<menu id="de.centerdevice.classcleaner.sampleMenu" label="ClassCleaner">
