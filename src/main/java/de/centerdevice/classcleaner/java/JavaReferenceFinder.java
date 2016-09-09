@@ -54,7 +54,7 @@ class JavaReferenceFinder {
 		List<CodeReference> references = new ArrayList<>();
 
 		for (IMethod method : type.getMethods()) {
-			if (!method.isMainMethod()) {
+			if (!method.isMainMethod() && !method.isConstructor() && !method.isLambdaMethod()) {
 				references.addAll(findReferences(method));
 			}
 		}
