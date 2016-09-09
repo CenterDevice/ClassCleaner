@@ -1,90 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-
    <extension
-         id="classCleanerBuilder"
-         name="ClassCleaner Builder"
-         point="org.eclipse.core.resources.builders">
-      <builder
-            hasNature="true">
-         <run
-               class="de.centerdevice.classcleaner.ClassCleanerBuilder">
-         </run>
+      id="classCleanerBuilder"
+      name="ClassCleaner Builder"
+      point="org.eclipse.core.resources.builders">
+      <builder hasNature="true">
+         <run class="de.centerdevice.classcleaner.ClassCleanerBuilder" />
       </builder>
    </extension>
    <extension
-         id="classCleanerNature"
-         name="ClassCleaner Nature"
-         point="org.eclipse.core.resources.natures">
+      id="classCleanerNature"
+      name="ClassCleaner Nature"
+      point="org.eclipse.core.resources.natures">
       <runtime>
-         <run
-               class="de.centerdevice.classcleaner.ClassCleanerNature">
-         </run>
+         <run class="de.centerdevice.classcleaner.ClassCleanerNature" />
       </runtime>
-      <builder
-            id="ClassCleaner.classCleanerBuilder">
-      </builder>
+      <builder id="ClassCleaner.classCleanerBuilder" />
    </extension>
-   <extension
-         point="org.eclipse.ui.commands">
+   <extension point="org.eclipse.ui.commands">
       <category
-            name="ClassCleaner Nature commands"
-            id="ClassCleaner.classCleanerNature.category">
-      </category>
+         name="ClassCleaner Nature commands"
+         id="ClassCleaner.classCleanerNature.category" />
       <command
-            name="Add/RemoveClassCleaner Nature"
-            defaultHandler="de.centerdevice.classcleaner.AddRemoveClassCleanerNatureHandler"
-            categoryId="ClassCleaner.classCleanerNature.category"
-            id="ClassCleaner.addRemoveClassCleanerNature">
-      </command>
+         name="Add/RemoveClassCleaner Nature"
+         defaultHandler="de.centerdevice.classcleaner.AddRemoveClassCleanerNatureHandler"
+         categoryId="ClassCleaner.classCleanerNature.category"
+         id="ClassCleaner.addRemoveClassCleanerNature" />
    </extension>
-   <extension
-         point="org.eclipse.ui.menus">
+   <extension point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+         locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
          <command
-               commandId="ClassCleaner.addRemoveClassCleanerNature"
-               label="Disable ClassCleaner"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="selection">
-                  <count
-                        value="1">
-                  </count>
+            commandId="ClassCleaner.addRemoveClassCleanerNature"
+            label="Disable ClassCleaner"
+            style="push">
+            <visibleWhen checkEnabled="false">
+               <with variable="selection">
+                  <count value="1" />
                   <iterate>
-                     <adapt
-                           type="org.eclipse.core.resources.IProject">
+                     <adapt type="org.eclipse.core.resources.IProject">
                         <test
-                              value="ClassCleaner.classCleanerNature"
-                              property="org.eclipse.core.resources.projectNature">
-                        </test>
+                           value="ClassCleaner.classCleanerNature"
+                           property="org.eclipse.core.resources.projectNature" />
                      </adapt>
                   </iterate>
                </with>
             </visibleWhen>
          </command>
          <command
-               commandId="ClassCleaner.addRemoveClassCleanerNature"
-               label="Enable ClassCleaner"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="selection">
-                  <count
-                        value="1">
-                  </count>
+            commandId="ClassCleaner.addRemoveClassCleanerNature"
+            label="Enable ClassCleaner"
+            style="push">
+            <visibleWhen checkEnabled="false">
+               <with variable="selection">
+                  <count value="1" />
                   <iterate>
-                     <adapt
-                           type="org.eclipse.core.resources.IProject">
+                     <adapt type="org.eclipse.core.resources.IProject">
                         <not>
                            <test
-                                 value="ClassCleaner.classCleanerNature"
-                                 property="org.eclipse.core.resources.projectNature">
-                           </test>
+                              value="ClassCleaner.classCleanerNature"
+                              property="org.eclipse.core.resources.projectNature" />
                         </not>
                      </adapt>
                   </iterate>
@@ -94,127 +70,119 @@
       </menuContribution>
    </extension>
    <extension point="org.eclipse.core.expressions.propertyTesters">
-     <propertyTester          
-        class="de.centerdevice.classcleaner.menu.DirectoryPropertyTester"
-           id="ClassCleanerDirectoryPropertyTester"
-           namespace="de.centerdevice.classcleaner"
-           properties="checkDirectory"
-           type="org.eclipse.core.resources.IFolder">
-     </propertyTester>
+      <propertyTester
+         class="de.centerdevice.classcleaner.menu.DirectoryPropertyTester"
+         id="ClassCleanerDirectoryPropertyTester"
+         namespace="de.centerdevice.classcleaner"
+         properties="checkDirectory"
+         type="org.eclipse.core.resources.IFolder" />
    </extension>
    <extension
-         id="xmlProblem"
-         name="XML Problem"
-         point="org.eclipse.core.resources.markers">
-      <super
-            type="org.eclipse.core.resources.problemmarker">
-      </super>
-      <persistent
-            value="false">
-      </persistent>
+      id="xmlProblem"
+      name="XML Problem"
+      point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.problemmarker" />
+      <persistent value="false" />
    </extension>
-   <extension
-        point="org.eclipse.ui.handlers">
-     <handler
-           class="de.centerdevice.classcleaner.menu.handler.RunCleanerHandler"
-           commandId="de.centerdevice.classcleaner.RunCleanerCommand">
-     </handler>
+   <extension point="org.eclipse.ui.handlers">
+      <handler
+         class="de.centerdevice.classcleaner.menu.handler.RunCleanerHandler"
+         commandId="de.centerdevice.classcleaner.RunCleanerCommand" />
    </extension>
-   <extension
-        point="org.eclipse.ui.handlers">
-     <handler
-           class="de.centerdevice.classcleaner.menu.handler.CreateDotFileHandler"
-           commandId="de.centerdevice.classcleaner.CreateDotFileCommand">
-     </handler>
+   <extension point="org.eclipse.ui.handlers">
+      <handler
+         class="de.centerdevice.classcleaner.menu.handler.CreateDotFileHandler"
+         commandId="de.centerdevice.classcleaner.CreateDotFileCommand" />
    </extension>
-   <extension
-        point="org.eclipse.ui.handlers">
-     <handler
-           class="de.centerdevice.classcleaner.menu.handler.ClearMarkersHandler"
-           commandId="de.centerdevice.classcleaner.ClearMarkersCommand">
-     </handler>
+   <extension point="org.eclipse.ui.handlers">
+      <handler
+         class="de.centerdevice.classcleaner.menu.handler.ClearMarkersHandler"
+         commandId="de.centerdevice.classcleaner.ClearMarkersCommand" />
    </extension>
-   <extension
-         point="org.eclipse.ui.commands">
-         <command name="Run full analysis"
-               id="de.centerdevice.classcleaner.RunCleanerCommand">
-         </command>
+   <extension point="org.eclipse.ui.commands">
+      <command
+         name="Run full analysis"
+         id="de.centerdevice.classcleaner.RunCleanerCommand" />
    </extension>
-   <extension
-         point="org.eclipse.ui.commands">
-         <command name="Create Dot-File"
-               id="de.centerdevice.classcleaner.CreateDotFileCommand">
-         </command>
+   <extension point="org.eclipse.ui.commands">
+      <command
+         name="Create Dot-File"
+         id="de.centerdevice.classcleaner.CreateDotFileCommand" />
    </extension>
-   <extension
-         point="org.eclipse.ui.commands">
-         <command name="Remove markers"
-               id="de.centerdevice.classcleaner.ClearMarkersCommand">
-         </command>
+   <extension point="org.eclipse.ui.commands">
+      <command
+         name="Remove markers"
+         id="de.centerdevice.classcleaner.ClearMarkersCommand" />
    </extension>
    <extension point="org.eclipse.ui.bindings">
-		<key sequence="M1+CTRL+C"
-			commandId="de.centerdevice.classcleaner.RunCleanerCommand"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			contextId="org.eclipse.ui.contexts.window"/>
+      <key
+         sequence="M1+CTRL+C"
+         commandId="de.centerdevice.classcleaner.RunCleanerCommand"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+         contextId="org.eclipse.ui.contexts.window" />
    </extension>
    <extension point="org.eclipse.ui.bindings">
-		<key sequence="M1+CTRL+SHIFT+C"
-			commandId="de.centerdevice.classcleaner.ClearMarkersCommand"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			contextId="org.eclipse.ui.contexts.window"/>
+      <key
+         sequence="M1+CTRL+SHIFT+C"
+         commandId="de.centerdevice.classcleaner.ClearMarkersCommand"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+         contextId="org.eclipse.ui.contexts.window" />
    </extension>
    <extension point="org.eclipse.ui.menus">
-     <menuContribution locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
-     	<menu id="de.centerdevice.classcleaner.sampleMenu" label="ClassCleaner">
-	        <command
-	            commandId="de.centerdevice.classcleaner.RunCleanerCommand"
-	            style="push">
-	            <visibleWhen
-	                 checkEnabled="false">
-	             	<iterate>
-			        	<adapt type="org.eclipse.core.resources.IResource">
-			        	<or>
-			         		<test property="org.eclipse.core.resources.name" 
-			               	      value="*.java"/>
-							<test forcePluginActivation="true"
-						          property="de.centerdevice.classcleaner.checkDirectory"/>
-			            </or>
-			       </adapt>
-			    	</iterate>
-	        	</visibleWhen>
-	        </command>
-	        <command
-	            commandId="de.centerdevice.classcleaner.CreateDotFileCommand"
-	            style="push">
-	            <visibleWhen
-	                 checkEnabled="false">
-	             <iterate>
-			       <adapt type="org.eclipse.core.resources.IResource">
-			         <test property="org.eclipse.core.resources.name" 
-			               value="*.java"/>
-			       </adapt>
-			     </iterate>
-	          </visibleWhen>
-	        </command>
-	        <command
-	            commandId="de.centerdevice.classcleaner.ClearMarkersCommand"
-	            style="push">
-	            <visibleWhen
-	                 checkEnabled="false">
-	             <iterate>
-			       <adapt type="org.eclipse.core.resources.IResource">
-			           <or>
-			         		<test property="org.eclipse.core.resources.name" 
-			               	      value="*.java"/>
-							<test forcePluginActivation="true"
-						          property="de.centerdevice.classcleaner.checkDirectory"/>
-			       	  </or>
-			       </adapt>
-			     </iterate>
-	          </visibleWhen>
-	        </command>
-     	</menu>
-     </menuContribution>
+      <menuContribution locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
+         <menu
+            id="de.centerdevice.classcleaner.sampleMenu"
+            label="ClassCleaner">
+            <command
+               commandId="de.centerdevice.classcleaner.RunCleanerCommand"
+               style="push">
+               <visibleWhen checkEnabled="false">
+                  <iterate>
+                     <adapt type="org.eclipse.core.resources.IResource">
+                        <or>
+                           <test
+                              property="org.eclipse.core.resources.name"
+                              value="*.java" />
+                           <test
+                              forcePluginActivation="true"
+                              property="de.centerdevice.classcleaner.checkDirectory" />
+                        </or>
+                     </adapt>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+               commandId="de.centerdevice.classcleaner.CreateDotFileCommand"
+               style="push">
+               <visibleWhen checkEnabled="false">
+                  <iterate>
+                     <adapt type="org.eclipse.core.resources.IResource">
+                        <test
+                           property="org.eclipse.core.resources.name"
+                           value="*.java" />
+                     </adapt>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+               commandId="de.centerdevice.classcleaner.ClearMarkersCommand"
+               style="push">
+               <visibleWhen checkEnabled="false">
+                  <iterate>
+                     <adapt type="org.eclipse.core.resources.IResource">
+                        <or>
+                           <test
+                              property="org.eclipse.core.resources.name"
+                              value="*.java" />
+                           <test
+                              forcePluginActivation="true"
+                              property="de.centerdevice.classcleaner.checkDirectory" />
+                        </or>
+                     </adapt>
+                  </iterate>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
    </extension>
 </plugin>
