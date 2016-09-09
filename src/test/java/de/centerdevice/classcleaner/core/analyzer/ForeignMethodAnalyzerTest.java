@@ -18,7 +18,7 @@ import de.centerdevice.classcleaner.core.model.Issue;
 import de.centerdevice.classcleaner.core.model.ReferenceScope;
 import de.centerdevice.classcleaner.core.recon.ReferenceReport;
 
-public class ReferenceCycleAnalyzerTest {
+public class ForeignMethodAnalyzerTest {
 	private HashMap<ClassInfo, List<CodeReference>> references;
 	private ReferenceAnalyzer analyzer;
 
