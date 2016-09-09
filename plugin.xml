@@ -119,6 +119,13 @@
      </handler>
    </extension>
    <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="de.centerdevice.classcleaner.ClearMarkersHandler"
+           commandId="de.centerdevice.classcleaner.ClearMarkersCommand">
+     </handler>
+   </extension>
+   <extension
          point="org.eclipse.ui.commands">
          <command name="Run full analysis"
                id="de.centerdevice.classcleaner.RunCleanerCommand">
@@ -128,6 +135,12 @@
          point="org.eclipse.ui.commands">
          <command name="Create Dot-File"
                id="de.centerdevice.classcleaner.CreateDotFileCommand">
+         </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+         <command name="Remove markers"
+               id="de.centerdevice.classcleaner.ClearMarkersCommand">
          </command>
    </extension>
    <extension point="org.eclipse.ui.bindings">
@@ -154,6 +167,19 @@
 	        </command>
 	        <command
 	            commandId="de.centerdevice.classcleaner.CreateDotFileCommand"
+	            style="push">
+	            <visibleWhen
+	                 checkEnabled="false">
+	             <iterate>
+			       <adapt type="org.eclipse.core.resources.IResource">
+			         <test property="org.eclipse.core.resources.name" 
+			               value="*.java"/>
+			       </adapt>
+			     </iterate>
+	          </visibleWhen>
+	        </command>
+	        <command
+	            commandId="de.centerdevice.classcleaner.ClearMarkersCommand"
 	            style="push">
 	            <visibleWhen
 	                 checkEnabled="false">

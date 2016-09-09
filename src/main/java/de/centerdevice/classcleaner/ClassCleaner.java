@@ -62,4 +62,8 @@ public class ClassCleaner {
 	public void removeAllMarkers(IProject project) throws CoreException {
 		marker.clean(project);
 	}
+
+	public void removeMarkers(IFile file) throws CoreException {
+		marker.deleteMarkers(file);
+	}
 }

@@ -5,8 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
@@ -25,6 +27,18 @@ public class JavaSelectionConverter {
 		}
 
 		return result;
+	}
+
+	public IProject toProject(IStructuredSelection selection) {
+		Object firstSelection = selection.getFirstElement();
+
+		if (firstSelection instanceof IProject) {
+			return (IProject) firstSelection;
+		} else if (firstSelection instanceof IJavaProject) {
+			return ((IJavaProject) firstSelection).getProject();
+		}
+
+		return null;
 	}
 
 	protected IFile analyzeCompilationUnit(ICompilationUnit unit) {
