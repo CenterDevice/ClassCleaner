@@ -41,4 +41,9 @@ public class ClassInfo {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "ClassInfo [name=" + name + ", lineNumber=" + lineNumber + "]";
+	}
 }
