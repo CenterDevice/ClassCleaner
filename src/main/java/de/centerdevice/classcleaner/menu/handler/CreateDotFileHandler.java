@@ -1,4 +1,4 @@
-package de.centerdevice.classcleaner;
+package de.centerdevice.classcleaner.menu.handler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import de.centerdevice.classcleaner.ClassCleaner;
 import de.centerdevice.classcleaner.core.model.CodeElement;
 import de.centerdevice.classcleaner.core.model.CodeReference;
 import de.centerdevice.classcleaner.core.model.FieldElement;

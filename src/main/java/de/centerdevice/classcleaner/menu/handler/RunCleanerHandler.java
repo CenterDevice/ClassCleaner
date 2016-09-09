@@ -1,4 +1,4 @@
-package de.centerdevice.classcleaner;
+package de.centerdevice.classcleaner.menu.handler;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -15,6 +15,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import de.centerdevice.classcleaner.ClassCleaner;
 import de.centerdevice.classcleaner.java.JavaSelectionConverter;
 
 public class RunCleanerHandler extends AbstractHandler implements IHandler {

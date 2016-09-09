@@ -107,21 +107,21 @@
    <extension
         point="org.eclipse.ui.handlers">
      <handler
-           class="de.centerdevice.classcleaner.RunCleanerHandler"
+           class="de.centerdevice.classcleaner.menu.handler.RunCleanerHandler"
            commandId="de.centerdevice.classcleaner.RunCleanerCommand">
      </handler>
    </extension>
    <extension
         point="org.eclipse.ui.handlers">
      <handler
-           class="de.centerdevice.classcleaner.CreateDotFileHandler"
+           class="de.centerdevice.classcleaner.menu.handler.CreateDotFileHandler"
            commandId="de.centerdevice.classcleaner.CreateDotFileCommand">
      </handler>
    </extension>
    <extension
         point="org.eclipse.ui.handlers">
      <handler
-           class="de.centerdevice.classcleaner.ClearMarkersHandler"
+           class="de.centerdevice.classcleaner.menu.handler.ClearMarkersHandler"
            commandId="de.centerdevice.classcleaner.ClearMarkersCommand">
      </handler>
    </extension>

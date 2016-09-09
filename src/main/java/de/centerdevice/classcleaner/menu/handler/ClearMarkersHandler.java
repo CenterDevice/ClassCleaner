@@ -1,4 +1,4 @@
-package de.centerdevice.classcleaner;
+package de.centerdevice.classcleaner.menu.handler;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import de.centerdevice.classcleaner.ClassCleaner;
 import de.centerdevice.classcleaner.java.JavaSelectionConverter;
 
 public class ClearMarkersHandler extends AbstractHandler implements IHandler {
