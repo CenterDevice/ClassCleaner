@@ -93,6 +93,15 @@
          </command>
       </menuContribution>
    </extension>
+   <extension point="org.eclipse.core.expressions.propertyTesters">
+     <propertyTester          
+        class="de.centerdevice.classcleaner.menu.DirectoryPropertyTester"
+           id="ClassCleanerDirectoryPropertyTester"
+           namespace="de.centerdevice.classcleaner"
+           properties="checkDirectory"
+           type="org.eclipse.core.resources.IFolder">
+     </propertyTester>
+   </extension>
    <extension
          id="xmlProblem"
          name="XML Problem"
@@ -148,7 +157,13 @@
 			commandId="de.centerdevice.classcleaner.RunCleanerCommand"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			contextId="org.eclipse.ui.contexts.window"/>
-	</extension>
+   </extension>
+   <extension point="org.eclipse.ui.bindings">
+		<key sequence="M1+CTRL+SHIFT+C"
+			commandId="de.centerdevice.classcleaner.ClearMarkersCommand"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			contextId="org.eclipse.ui.contexts.window"/>
+   </extension>
    <extension point="org.eclipse.ui.menus">
      <menuContribution locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
      	<menu id="de.centerdevice.classcleaner.sampleMenu" label="ClassCleaner">
@@ -159,8 +174,12 @@
 	                 checkEnabled="false">
 	             	<iterate>
 			        	<adapt type="org.eclipse.core.resources.IResource">
-			         	<test property="org.eclipse.core.resources.name" 
-			               value="*.java"/>
+			        	<or>
+			         		<test property="org.eclipse.core.resources.name" 
+			               	      value="*.java"/>
+							<test forcePluginActivation="true"
+						          property="de.centerdevice.classcleaner.checkDirectory"/>
+			            </or>
 			       </adapt>
 			    	</iterate>
 	        	</visibleWhen>
@@ -185,8 +204,12 @@
 	                 checkEnabled="false">
 	             <iterate>
 			       <adapt type="org.eclipse.core.resources.IResource">
-			         <test property="org.eclipse.core.resources.name" 
-			               value="*.java"/>
+			           <or>
+			         		<test property="org.eclipse.core.resources.name" 
+			               	      value="*.java"/>
+							<test forcePluginActivation="true"
+						          property="de.centerdevice.classcleaner.checkDirectory"/>
+			       	  </or>
 			       </adapt>
 			     </iterate>
 	          </visibleWhen>
