@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-
    <extension
          id="classCleanerBuilder"
          name="ClassCleaner Builder"
@@ -174,12 +173,16 @@
 	                 checkEnabled="false">
 	             	<iterate>
 			        	<adapt type="org.eclipse.core.resources.IResource">
-			        	<or>
-			         		<test property="org.eclipse.core.resources.name" 
-			               	      value="*.java"/>
-							<test forcePluginActivation="true"
-						          property="de.centerdevice.classcleaner.checkDirectory"/>
-			            </or>
+			        	  <and>
+			       	        <test property="org.eclipse.core.resources.projectNature"
+                		          value="ClassCleaner.classCleanerNature" />
+			        	      <or>
+			         		    <test property="org.eclipse.core.resources.name" 
+			               	          value="*.java"/>
+							    <test forcePluginActivation="true"
+						              property="de.centerdevice.classcleaner.checkDirectory"/>
+			                  </or>
+			                </and>
 			       </adapt>
 			    	</iterate>
 	        	</visibleWhen>
@@ -191,8 +194,12 @@
 	                 checkEnabled="false">
 	             <iterate>
 			       <adapt type="org.eclipse.core.resources.IResource">
-			         <test property="org.eclipse.core.resources.name" 
+			         <and>
+			       	   <test property="org.eclipse.core.resources.projectNature"
+                		   value="ClassCleaner.classCleanerNature" />
+			           <test property="org.eclipse.core.resources.name" 
 			               value="*.java"/>
+			         </and>
 			       </adapt>
 			     </iterate>
 	          </visibleWhen>
@@ -204,12 +211,16 @@
 	                 checkEnabled="false">
 	             <iterate>
 			       <adapt type="org.eclipse.core.resources.IResource">
+			         <and>
+			       	   <test property="org.eclipse.core.resources.projectNature"
+                			 value="ClassCleaner.classCleanerNature" />
 			           <or>
 			         		<test property="org.eclipse.core.resources.name" 
 			               	      value="*.java"/>
 							<test forcePluginActivation="true"
 						          property="de.centerdevice.classcleaner.checkDirectory"/>
 			       	  </or>
+			       	 </and>
 			       </adapt>
 			     </iterate>
 	          </visibleWhen>
