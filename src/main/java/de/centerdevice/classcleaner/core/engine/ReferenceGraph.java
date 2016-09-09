@@ -30,15 +30,19 @@ public class ReferenceGraph {
 	}
 
 	private void addReference(CodeReference reference) {
-		if (reference.getSource() != null && reference.getDestination() != null) {
-			addReference(reference.getSource(), reference.getDestination());
-		}
+		addReference(reference.getSource(), reference.getDestination());
 	}
 
 	protected void addReference(CodeElement source, CodeElement destination) {
-		directedGraph.addVertex(source);
-		directedGraph.addVertex(destination);
-		directedGraph.addEdge(source, destination);
+		if (source != null) {
+			directedGraph.addVertex(source);
+		}
+		if (destination != null) {
+			directedGraph.addVertex(destination);
+		}
+		if (source != null && destination != null) {
+			directedGraph.addEdge(source, destination);
+		}
 	}
 
 	public Set<CodeElement> getCycles() {
