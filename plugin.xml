@@ -69,6 +69,13 @@
          </command>
       </menuContribution>
    </extension>
+   <extension
+      point = "org.eclipse.ui.preferencePages">
+      <page id="de.centerdevice.classcleaner.Preferences"
+	     class="de.centerdevice.classcleaner.menu.PreferencePage"
+            name="ClassCleaner">
+      </page>
+   </extension>
    <extension point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
          class="de.centerdevice.classcleaner.menu.DirectoryPropertyTester"
@@ -76,6 +83,12 @@
          namespace="de.centerdevice.classcleaner"
          properties="checkDirectory"
          type="org.eclipse.core.resources.IFolder" />
+   </extension>
+   <extension
+      point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="de.centerdevice.classcleaner.menu.PreferenceInitializer">
+      </initializer>
    </extension>
    <extension
       id="xmlProblem"

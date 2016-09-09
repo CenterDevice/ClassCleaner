@@ -39,8 +39,18 @@ public class ClassCleaner {
 		analyze(resource, ReferenceScope.Project, monitor);
 	}
 
-	public void analyzeQuick(IFile resource, IProgressMonitor monitor) {
-		analyze(resource, ReferenceScope.Class, monitor);
+	public void analyze(IFile resource, IProgressMonitor monitor) {
+		analyze(resource, getScope(), monitor);
+	}
+
+	public ReferenceScope getScope() {
+		String scope = ClassCleanerPlugin.getDefault().getPreferenceStore()
+				.getString(ClassCleanerPlugin.DEFAULT_REFERENCE_SCOPE);
+		try {
+			return ReferenceScope.valueOf(scope);
+		} catch (Exception e) {
+			return ReferenceScope.Class;
+		}
 	}
 
 	private void analyze(IFile resource, ReferenceScope scope, IProgressMonitor monitor) {
@@ -48,11 +58,21 @@ public class ClassCleaner {
 
 		ReferenceReport report = generateReport(resource, scope, monitor);
 		Set<Issue> issues = new HashSet<>();
-		issues.addAll(new UnusedMethodAnalyzer().analyze(report));
-		issues.addAll(new MethodClusterAnalyzer().analyze(report));
-		issues.addAll(new ForeignMethodAnalyzer().analyze(report));
+		if (isEnabled(ClassCleanerPlugin.ANALYZER_UNUSED_METHOD)) {
+			issues.addAll(new UnusedMethodAnalyzer().analyze(report));
+		}
+		if (isEnabled(ClassCleanerPlugin.ANALYZER_METHOD_CLUSTER)) {
+			issues.addAll(new MethodClusterAnalyzer().analyze(report));
+		}
+		if (isEnabled(ClassCleanerPlugin.ANALYZER_FOREIGN_METHOD)) {
+			issues.addAll(new ForeignMethodAnalyzer().analyze(report));
+		}
 
 		marker.addMarker(resource, issues);
+	}
+
+	private boolean isEnabled(String analyzerUnusedMethod) {
+		return ClassCleanerPlugin.getDefault().getPreferenceStore().getBoolean(analyzerUnusedMethod);
 	}
 
 	public ReferenceReport generateReport(IFile resource, ReferenceScope scope, IProgressMonitor monitor) {
